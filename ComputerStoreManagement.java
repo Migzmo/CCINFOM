@@ -8,10 +8,6 @@ public class ComputerStoreManagement {
     private static final String DB_PASSWORD = ""; // ENTER YOUR MySQL PASSWORD HERE
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ComputerStoreManagement().createGUI());
-    }
-
-    private void createGUI() {
         JFrame frame = new JFrame("Computer Retail Store Management");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
@@ -40,11 +36,15 @@ public class ComputerStoreManagement {
         btnGenerateReports.addActionListener(e -> generateReports());
         buttonPanel.add(btnGenerateReports);
 
+        JButton exitButton = new JButton("Exit");
+        exitButton.addActionListener(e -> System.exit(0));
+        buttonPanel.add(exitButton);
+
         frame.add(buttonPanel, BorderLayout.CENTER);
         frame.setVisible(true);
     }
 
-    private void sellProducts() {
+    public void sellProducts() {
         String productId = JOptionPane.showInputDialog("Enter Product ID:");
         String branchId = JOptionPane.showInputDialog("Enter Branch ID:");
         String customerId = JOptionPane.showInputDialog("Enter Customer ID:");
@@ -53,7 +53,7 @@ public class ComputerStoreManagement {
 
     }
 
-    private void supplyProducts() {
+    public void supplyProducts() {
         String productId = JOptionPane.showInputDialog("Enter Product ID:");
         String sourceBranchId = JOptionPane.showInputDialog("Enter Source Branch ID:");
         String destinationBranchId = JOptionPane.showInputDialog("Enter Destination Branch ID:");
@@ -62,7 +62,7 @@ public class ComputerStoreManagement {
 
     }
 
-    private void transferEmployee() {
+    public void transferEmployee() {
         String employeeId = JOptionPane.showInputDialog("Enter Employee ID:");
         String oldBranchId = JOptionPane.showInputDialog("Enter Old Branch ID:");
         String newBranchId = JOptionPane.showInputDialog("Enter New Branch ID:");
@@ -71,14 +71,14 @@ public class ComputerStoreManagement {
 
     }
 
-    private void handleCustomerSupport() {
+    public void handleCustomerSupport() {
         String customerId = JOptionPane.showInputDialog("Enter Customer ID:");
         String productId = JOptionPane.showInputDialog("Enter Product ID:");
         String description = JOptionPane.showInputDialog("Enter Issue Description:");
 
     }
 
-    private void generateReports() {
+    public void generateReports() {
         String reportType = JOptionPane.showInputDialog("Enter Report Type (1 for Sales, 2 for Stock, 3 for Customer Ticket, 4 for Customer Satisfaction):");
 
     }
