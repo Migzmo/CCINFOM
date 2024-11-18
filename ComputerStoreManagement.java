@@ -1,3 +1,8 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import javax.swing.*;
 //the MODEL of the gui basically where the brain works
 public class ComputerStoreManagement {
@@ -23,88 +28,52 @@ public class ComputerStoreManagement {
         String transferPerson = JOptionPane.showInputDialog("Enter Name of Transfer Person:");
 
     }
+    public static boolean validTransfer (String employeeId, String oldBranchId, String newBranchId, String newJobId, String departmentId, String reason, StringBuilder error) {
+        boolean valid = true;
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)){
+            
 
-    public static void transferEmployee() {
-        JTextField employeeIdField = new JTextField();
-        JTextField oldBranchIdField = new JTextField();
-        JTextField newBranchIdField = new JTextField();
-        JTextField newJobIdField = new JTextField();
-        JTextField departmentIdField = new JTextField();
-        JTextField reasonField = new JTextField();
+            if (!isEmployeeIdValid(connection, employeeId)) {
+                error.append("Employee ID does not exist. Please try again.");
+                valid = false;
+            }
+            if (!isBranchIdValid(connection, oldBranchId)) {
+                error.append("Error: Old Branch ID does not exist. Please try again.");
+                valid = false;
+            }
+            if (!isBranchIdValid(connection, newBranchId)) {
+                error.append("Error: New Branch ID does not exist. Please try again.");
+                valid = false;
+            }
+            if (!isJobIdValid(connection, newJobId)) {
+                error.append("Error: Job ID does not exist. Please try again.");
+                valid = false;
+            }
+            if (!isDepartmentIdValid(connection, departmentId) && (departmentId != null) && !departmentId.equals("0")) {
+                error.append( "Error: Department ID does not exist. Please try again.");
+                valid = false;
+            }
+            if(!valid){
+                return false;
+            }
+        
+        } catch (Exception ex) {
+            error.append("Error: ").append(ex.getMessage());
+            return false;
+
+        }
+                return valid;
+    }
+    public static boolean transferEmployee(String employeeId, String oldBranchId, String newBranchId, String newJobId, String departmentId, String reason) {
 
         int option; 
         boolean validInputs; 
-	    String employeeId = null;
-        String oldBranchId = null;
-        String newBranchId = null;
-        String newJobId = null;
-        String departmentId = null;
-        String reason = null;  
+	     
     
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            do {
-                Object[] message = {
-                    "Enter Employee ID:", employeeIdField,
-                    "Enter Old Branch ID:", oldBranchIdField,
-                    "Enter New Branch ID:", newBranchIdField,
-                    "Enter New Job ID:", newJobIdField,
-                    "Enter New Department (if applicable)\nOtherwise, enter 0:", departmentIdField,
-                    "Enter Reason for Transfer:", reasonField
-                };
+            
 
-                option = JOptionPane.showConfirmDialog(null, message, "Transfer Employee", JOptionPane.OK_CANCEL_OPTION);
-                validInputs = true;
-                employeeId = employeeIdField.getText();
-                oldBranchId = oldBranchIdField.getText();
-                newBranchId = newBranchIdField.getText();
-                newJobId = newJobIdField.getText();
-                departmentId = departmentIdField.getText();
-                reason = reasonField.getText();
-
-                // For Input Checking:
-                if (option == JOptionPane.OK_OPTION) {
-                    String[] warning = {
-                        "Invalid Input/s. Please try again."
-                    };
-                
-                    if (!isEmployeeIdValid(connection, employeeId)) {
-                        validInputs = false;
-                        warning = Arrays.copyOf(warning, warning.length + 1);
-                        warning[warning.length - 1] = "Error: Employee ID does not exist.";
-                    }
-
-                    if (!isBranchIdValid(connection, oldBranchId)) {
-                        validInputs = false;
-                        warning = Arrays.copyOf(warning, warning.length + 1);
-                        warning[warning.length - 1] = "Error: Old Branch ID does not exist.";
-                    }
-
-                    if (!isBranchIdValid(connection, newBranchId)) {
-                        validInputs = false;
-                        warning = Arrays.copyOf(warning, warning.length + 1);
-                        warning[warning.length - 1] = "Error: New Branch ID does not exist.";
-                    }
-
-                    if (!isJobIdValid(connection, newJobId)) {
-                        validInputs = false;
-                        warning = Arrays.copyOf(warning, warning.length + 1);
-                        warning[warning.length - 1] = "Error: Job ID does not exist.";
-                    }
-
-                    if (!isDepartmentIdValid(connection, departmentId) && (departmentId != null) && !departmentId.equals("0")) {
-                        validInputs = false;
-                        warning = Arrays.copyOf(warning, warning.length + 1);
-                        warning[warning.length - 1] = "Error: Department ID does not exist.";
-                    }
-                    
-                    if (!validInputs){
-                        JOptionPane.showMessageDialog(null, warning);
-                    }
-                }
-
-            } while (!validInputs && option == JOptionPane.OK_OPTION);
-
-            if (option == JOptionPane.OK_OPTION) {
+            
                 if ((departmentId == null) || departmentId.equals("0") || departmentId.trim().isEmpty()) {
                     // If department ID is blank, use the current department_id from the employee record
                     departmentId = getCurrentDepartmentId(connection, employeeId);
@@ -146,10 +115,10 @@ public class ComputerStoreManagement {
                     updateEmployee.executeUpdate();
                 }
         
-                JOptionPane.showMessageDialog(null, "Employee transfer recorded!");
-            }
+                return true;
+            
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+            return false;
         }
     }
     
