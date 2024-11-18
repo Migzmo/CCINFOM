@@ -1,7 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.plaf.multi.MultiViewportUI;
-import javax.swing.text.View;
+
 // the controller or the middleman of both the model and the view
 public class ComputerStoreController {
     private ComputerStoreManagement model;
@@ -10,6 +9,27 @@ public class ComputerStoreController {
     public ComputerStoreController(ComputerStoreManagement model, userView view) {
         this.model = model;
         this.view = view;
+
+        this.view.setRecordsManagementBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //view.displayRecordsManagement();
+            }
+        });
+
+        this.view.setTransactionsBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayTransactions();
+            }
+        });
+
+        this.view.setGenerateReportsBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //view.displayGenerateReports();
+            }
+        });
 
         this.view.addSellProductsListener(new ActionListener() {
             @Override
@@ -79,6 +99,14 @@ public class ComputerStoreController {
                 model.handleCustomerSupport();
             }   
         });
+
+        this.view.setTransactionsBackBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayMainScreen();
+            }
+        });
+
         this.view.addGenerateReportsListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -86,6 +114,4 @@ public class ComputerStoreController {
             }
         });
     }
-
-   
 }
