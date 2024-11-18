@@ -86,11 +86,11 @@ public class ComputerStoreController {
             }
         });
 
-        this.view.backjButtonListener(new ActionListener() {
+        this.view.backButtonTrnscListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.enableAllMainBtns();
-                view.displayMainScreen();
+                view.displayTransactions();
             }
         });
         this.view.addCustomerSupportListener(new ActionListener() {
@@ -107,7 +107,7 @@ public class ComputerStoreController {
             }
         });
 
-        this.view.addGenerateReportsListener(new ActionListener() {
+        this.view.setGenerateReportsBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 model.generateReports();

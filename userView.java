@@ -29,9 +29,8 @@ public class userView {
     private JButton transactionsBackBtn;
 
     // idk yet
-    private JButton btnGenerateReports;
     private JButton exitButton;
-    private JButton backButton;
+    private JButton backButtonToTrsnc;
 
     // idk yet
     private JPanel BtnTrsfrPanel;
@@ -91,7 +90,7 @@ public class userView {
         // Transfer Employee
         applyTrnsfrButton = new JButton("Apply");
         discardTrnsfrButton = new JButton("Discard");
-        backButton = new JButton("Back");
+        backButtonToTrsnc = new JButton("Back");
 
         // Adds MainUIPanel to frame.
         frame.add(mainUIPanel);
@@ -112,13 +111,11 @@ public class userView {
     }
 
     // ----
-    public void backjButtonListener(ActionListener listener) {
-        backButton.addActionListener(listener);
+    public void backButtonTrnscListener(ActionListener listener) {
+        backButtonToTrsnc.addActionListener(listener);
     }
 
-    public void addGenerateReportsListener(ActionListener listener) {
-        btnGenerateReports.addActionListener(listener);
-    }
+    
     // ----
 
     public void addSellProductsListener(ActionListener listener) {
@@ -235,7 +232,7 @@ public class userView {
         JButton discardButton = new JButton("Discard");
         buttonPanel.add(applyButton);
         buttonPanel.add(discardButton);
-
+        buttonPanel.add(backButtonToTrsnc);
         sellProductMainPanel.add(productIdLabel, BorderLayout.NORTH);
         sellProductMainPanel.add(inputPanel, BorderLayout.CENTER);
         sellProductMainPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -273,7 +270,7 @@ public class userView {
 
         BtnTrsfrPanel.add(applyTrnsfrButton);
         BtnTrsfrPanel.add(discardTrnsfrButton);
-        BtnTrsfrPanel.add(backButton);
+        BtnTrsfrPanel.add(backButtonToTrsnc);
 
         frame.getContentPane().removeAll();
         frame.getContentPane().add(transferEmployeePanel, BorderLayout.CENTER);
@@ -308,20 +305,17 @@ public class userView {
     }
 
     public void disableAllMainBtns() {
-        btnSellProducts.setVisible(false);
-        btnSupplyProducts.setVisible(false);
-        btnTransferEmployee.setVisible(false);
-        btnCustomerSupport.setVisible(false);
-        btnGenerateReports.setVisible(false);
+        recordsManagementBtn.setEnabled(false);
+        transactionsBtn.setEnabled(false);
+        generateReportsBtn.setEnabled(false);
+        
 
     }
 
     public void enableAllMainBtns() {
-        btnSellProducts.setVisible(true);
-        btnSupplyProducts.setVisible(true);
-        btnTransferEmployee.setVisible(true);
-        btnCustomerSupport.setVisible(true);
-        btnGenerateReports.setVisible(true);
+        recordsManagementBtn.setEnabled(true);
+        transactionsBtn.setEnabled(true);
+        generateReportsBtn.setEnabled(true);
     }
 
     // Verification / Error Prompts
