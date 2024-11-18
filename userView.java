@@ -4,9 +4,12 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.Border;
 
-//the VIEW of the gui basically where the user interacts
+/**
+ * The UserView class acts as the view in the Model-View-Controller (MVC) pattern.
+ * It is responsible for handling the Graphical User Interface and inputs needed
+ * for the database application to work.
+ */
 public class userView {
-
     // Main Panel
     private JFrame frame;
 
@@ -25,10 +28,12 @@ public class userView {
     private JButton btnCustomerSupport;
     private JButton transactionsBackBtn;
 
+    // idk yet
     private JButton btnGenerateReports;
     private JButton exitButton;
     private JButton backButton;
 
+    // idk yet
     private JPanel BtnTrsfrPanel;
     private JButton applyTrnsfrButton;
     private JButton discardTrnsfrButton;
@@ -106,7 +111,7 @@ public class userView {
         generateReportsBtn.addActionListener(actionListener);
     }
 
-    // Temp
+    // ----
     public void backjButtonListener(ActionListener listener) {
         backButton.addActionListener(listener);
     }
@@ -114,6 +119,7 @@ public class userView {
     public void addGenerateReportsListener(ActionListener listener) {
         btnGenerateReports.addActionListener(listener);
     }
+    // ----
 
     public void addSellProductsListener(ActionListener listener) {
         btnSellProducts.addActionListener(listener);
@@ -135,15 +141,61 @@ public class userView {
         transactionsBackBtn.addActionListener(actionListener);
     }
 
-
-
+    // ---
     public void discardTransferEmployeeListener(ActionListener listener) {
         discardTrnsfrButton.addActionListener(listener);
     }
 
+    public void addTransferEmployeeListener(ActionListener listener) {
+        btnTransferEmployee.addActionListener(listener);
+    }
+    // ---
+
+    // Display Methods
     public void displayMainScreen() {
         frame.getContentPane().removeAll();
         frame.getContentPane().add(mainUIPanel, BorderLayout.CENTER);
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    public void displayTransactions() {
+        // Transaction UI
+        JPanel transactionsUIPanel = new JPanel();
+        transactionsUIPanel = new JPanel(new GridLayout(6, 1, 0, 10));
+
+        Border raisedBevelBorder = BorderFactory.createRaisedBevelBorder();
+        Border emptyBorder = BorderFactory.createEmptyBorder(15, 15, 15, 15);
+        Border compoundBorder = BorderFactory.createCompoundBorder(raisedBevelBorder, emptyBorder);
+        transactionsUIPanel.setBorder(compoundBorder);
+
+        transactionLabel.setHorizontalAlignment(JLabel.CENTER);
+        transactionLabel.setFont(titleLabel.getFont().deriveFont(25f));
+
+        btnSellProducts.setFocusable(false);
+        btnSellProducts.setBounds(0, 0, 100, 100);
+
+        btnSupplyProducts.setFocusable(false);
+        btnSupplyProducts.setBounds(0, 0, 100, 100);
+
+        btnTransferEmployee.setFocusable(false);
+        btnTransferEmployee.setBounds(0, 0, 100, 100);
+
+        btnCustomerSupport.setFocusable(false);
+        btnCustomerSupport.setBounds(0, 0, 100, 100);
+
+        transactionsBackBtn.setFocusable(false);
+        transactionsBackBtn.setBounds(0, 0, 100, 100);
+
+        transactionsUIPanel.add(transactionLabel);
+        transactionsUIPanel.add(btnSellProducts);
+        transactionsUIPanel.add(btnSupplyProducts);
+        transactionsUIPanel.add(btnTransferEmployee);
+        transactionsUIPanel.add(btnCustomerSupport);
+        transactionsUIPanel.add(transactionsBackBtn);
+
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(transactionsUIPanel, BorderLayout.CENTER);
         frame.revalidate();
         frame.repaint();
     }
@@ -194,10 +246,43 @@ public class userView {
         frame.repaint();
     }
 
-    public void addTransferEmployeeListener(ActionListener listener) {
-        btnTransferEmployee.addActionListener(listener);
+    public void displayTransferEmployeeForm() {
+        JPanel transferEmployeePanel = new JPanel(new GridLayout(7, 2, 10, 10));
+
+        employeeIdField = new JTextField();
+        oldBranchIdField = new JTextField();
+        newBranchIdField = new JTextField();
+        newJobIdField = new JTextField();
+        departmentIdField = new JTextField();
+        reasonField = new JTextField();
+
+        transferEmployeePanel.add(new JLabel("Employee ID:"));
+        transferEmployeePanel.add(employeeIdField);
+        transferEmployeePanel.add(new JLabel("Old Branch ID:"));
+        transferEmployeePanel.add(oldBranchIdField);
+        transferEmployeePanel.add(new JLabel("New Branch ID:"));
+        transferEmployeePanel.add(newBranchIdField);
+        transferEmployeePanel.add(new JLabel("New Job ID:"));
+        transferEmployeePanel.add(newJobIdField);
+        transferEmployeePanel.add(new JLabel("New Department ID (if applicable):"));
+        transferEmployeePanel.add(departmentIdField);
+        transferEmployeePanel.add(new JLabel("Reason for Transfer:"));
+        transferEmployeePanel.add(reasonField);
+
+        BtnTrsfrPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+
+        BtnTrsfrPanel.add(applyTrnsfrButton);
+        BtnTrsfrPanel.add(discardTrnsfrButton);
+        BtnTrsfrPanel.add(backButton);
+
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(transferEmployeePanel, BorderLayout.CENTER);
+        frame.getContentPane().add(BtnTrsfrPanel, BorderLayout.SOUTH);
+        frame.revalidate();
+        frame.repaint();
     }
 
+    // Getters and Setters
     public JTextField getEmployeeIdField() {
         return employeeIdField;
     }
@@ -239,84 +324,7 @@ public class userView {
         btnGenerateReports.setVisible(true);
     }
 
-    public void displayTransactions() {
-        // Transaction UI
-        JPanel transactionsUIPanel = new JPanel();
-        transactionsUIPanel = new JPanel(new GridLayout(6, 1, 0, 10));
-
-        Border raisedBevelBorder = BorderFactory.createRaisedBevelBorder();
-        Border emptyBorder = BorderFactory.createEmptyBorder(15, 15, 15, 15);
-        Border compoundBorder = BorderFactory.createCompoundBorder(raisedBevelBorder, emptyBorder);
-        transactionsUIPanel.setBorder(compoundBorder);
-
-        transactionLabel.setHorizontalAlignment(JLabel.CENTER);
-        transactionLabel.setFont(titleLabel.getFont().deriveFont(25f));
-
-        btnSellProducts.setFocusable(false);
-        btnSellProducts.setBounds(0, 0, 100, 100);
-
-        btnSupplyProducts.setFocusable(false);
-        btnSupplyProducts.setBounds(0, 0, 100, 100);
-
-        btnTransferEmployee.setFocusable(false);
-        btnTransferEmployee.setBounds(0, 0, 100, 100);
-
-        btnCustomerSupport.setFocusable(false);
-        btnCustomerSupport.setBounds(0, 0, 100, 100);
-
-        transactionsBackBtn.setFocusable(false);
-        transactionsBackBtn.setBounds(0, 0, 100, 100);
-
-        transactionsUIPanel.add(transactionLabel);
-        transactionsUIPanel.add(btnSellProducts);
-        transactionsUIPanel.add(btnSupplyProducts);
-        transactionsUIPanel.add(btnTransferEmployee);
-        transactionsUIPanel.add(btnCustomerSupport);
-        transactionsUIPanel.add(transactionsBackBtn);
-
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(transactionsUIPanel, BorderLayout.CENTER);
-        frame.revalidate();
-        frame.repaint();
-    }
-
-    public void displayTransferEmployeeForm() {
-        JPanel transferEmployeePanel = new JPanel(new GridLayout(7, 2, 10, 10));
-
-        employeeIdField = new JTextField();
-        oldBranchIdField = new JTextField();
-        newBranchIdField = new JTextField();
-        newJobIdField = new JTextField();
-        departmentIdField = new JTextField();
-        reasonField = new JTextField();
-
-        transferEmployeePanel.add(new JLabel("Employee ID:"));
-        transferEmployeePanel.add(employeeIdField);
-        transferEmployeePanel.add(new JLabel("Old Branch ID:"));
-        transferEmployeePanel.add(oldBranchIdField);
-        transferEmployeePanel.add(new JLabel("New Branch ID:"));
-        transferEmployeePanel.add(newBranchIdField);
-        transferEmployeePanel.add(new JLabel("New Job ID:"));
-        transferEmployeePanel.add(newJobIdField);
-        transferEmployeePanel.add(new JLabel("New Department ID (if applicable):"));
-        transferEmployeePanel.add(departmentIdField);
-        transferEmployeePanel.add(new JLabel("Reason for Transfer:"));
-        transferEmployeePanel.add(reasonField);
-
-        BtnTrsfrPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-
-        BtnTrsfrPanel.add(applyTrnsfrButton);
-        BtnTrsfrPanel.add(discardTrnsfrButton);
-        BtnTrsfrPanel.add(backButton);
-
-        frame.getContentPane().removeAll();
-        frame.getContentPane().add(transferEmployeePanel, BorderLayout.CENTER);
-        frame.getContentPane().add(BtnTrsfrPanel, BorderLayout.SOUTH);
-        frame.revalidate();
-        frame.repaint();
-
-    }
-
+    // Verification / Error Prompts
     public void displayTransferSucess() {
         JOptionPane.showMessageDialog(frame, "Employee transfer successful", "Transfer Success", JOptionPane.INFORMATION_MESSAGE);
     }
