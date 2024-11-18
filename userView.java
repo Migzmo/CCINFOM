@@ -28,6 +28,31 @@ public class userView {
     private JButton btnCustomerSupport;
     private JButton transactionsBackBtn;
 
+    //  Sell products
+    private JTextField productIdField;
+    private JTextField branchIdField;
+    private JTextField customerIdField;
+    private JTextField quantityField;
+    private JTextField priceField;
+    private JButton applySellButton;
+    private JButton discardSellButton;
+
+    // supply products
+    private JTextField supplyIdField;
+    private JTextField supplySourceBranchIdField;
+    private JTextField supplyDestinationBranchIdField;
+    private JTextField supplyQuantityField;
+    private JTextField supplyTransferPerson;
+    private JButton applySupplyButton;
+    private JButton discardSupplyButton;
+    
+    //customer support
+    private JTextField cscustomerIDField;
+    private JTextField csproductIDField;
+    private JTextArea csdescriptionField;
+    private JButton applyCustomerSupportButton;
+    private JButton discardCustomerSupportButton;
+
     // idk yet
     private JButton exitButton;
     private JButton backButtonToTrsnc;
@@ -92,6 +117,19 @@ public class userView {
         discardTrnsfrButton = new JButton("Discard");
         backButtonToTrsnc = new JButton("Back");
 
+        // sell products 
+        
+        applySellButton = new JButton("Apply");
+        discardSellButton = new JButton("Discard");
+
+        //supply products
+        applySupplyButton = new JButton("Apply");
+        discardSupplyButton = new JButton("Discard");
+
+        //customer support
+        applyCustomerSupportButton = new JButton("Apply");
+        discardCustomerSupportButton = new JButton("Discard");
+
         // Adds MainUIPanel to frame.
         frame.add(mainUIPanel);
         frame.setVisible(true);
@@ -111,11 +149,23 @@ public class userView {
     }
 
     // ----
+    public void setApplyCustomerSupportButton(ActionListener listener) {
+        applyCustomerSupportButton.addActionListener(listener);
+    }
+    public void setDiscardCustomerSupportButton(ActionListener listener) {
+        discardCustomerSupportButton.addActionListener(listener);
+    }
     public void backButtonTrnscListener(ActionListener listener) {
         backButtonToTrsnc.addActionListener(listener);
     }
 
-    
+    public void setApplySellButton(ActionListener listener) {
+        applySellButton.addActionListener(listener);
+    }
+
+    public void setDiscardSellButton(ActionListener listener) {
+        discardSellButton.addActionListener(listener);
+    }
     // ----
 
     public void addSellProductsListener(ActionListener listener) {
@@ -137,7 +187,12 @@ public class userView {
     public void setTransactionsBackBtnListener(ActionListener actionListener) {
         transactionsBackBtn.addActionListener(actionListener);
     }
-
+    public void setApplySupplyButtonListener(ActionListener actionListener) {
+        applySupplyButton.addActionListener(actionListener);
+    }
+    public void setDiscardSupplyButtonListener(ActionListener actionListener) {
+        discardSupplyButton.addActionListener(actionListener);
+    }
     // ---
     public void discardTransferEmployeeListener(ActionListener listener) {
         discardTrnsfrButton.addActionListener(listener);
@@ -197,10 +252,16 @@ public class userView {
         frame.repaint();
     }
 
-    public void displaySellProducts() {
-        JLabel productIdLabel = new JLabel("Sell Products");
+    public void displaySupplyProducts() {
+        JLabel productIdLabel = new JLabel("Supply Products");
         productIdLabel.setHorizontalAlignment(JLabel.CENTER);
         productIdLabel.setFont(productIdLabel.getFont().deriveFont(30f));
+
+        supplyIdField = new JTextField();
+        supplySourceBranchIdField = new JTextField();
+        supplyDestinationBranchIdField = new JTextField();
+        supplyQuantityField = new JTextField();
+        supplyTransferPerson = new JTextField();
 
         JPanel sellProductMainPanel = new JPanel(new BorderLayout());
         sellProductMainPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
@@ -208,30 +269,63 @@ public class userView {
         JPanel inputPanel = new JPanel(new GridLayout(5, 2, 10, 10));
 
         inputPanel.add(new JLabel("Product ID:"));
-        JTextField productIdField = new JTextField();
-        inputPanel.add(productIdField);
-
-        inputPanel.add(new JLabel("Branch ID:"));
-        JTextField branchIdField = new JTextField();
-        inputPanel.add(branchIdField);
-
-        inputPanel.add(new JLabel("Customer ID:"));
-        JTextField customerIdField = new JTextField();
-        inputPanel.add(customerIdField);
-
+        inputPanel.add(supplyIdField);
+        inputPanel.add(new JLabel("Source Branch ID:"));
+        inputPanel.add(supplySourceBranchIdField);
+        inputPanel.add(new JLabel("Destination Branch ID:"));
+        inputPanel.add( supplyDestinationBranchIdField);
         inputPanel.add(new JLabel("Quantity:"));
-        JTextField quantityField = new JTextField();
-        inputPanel.add(quantityField);
+        inputPanel.add(supplyQuantityField);
+        inputPanel.add(new JLabel("Name of Transfer Person:"));
+        inputPanel.add(supplyTransferPerson);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+      
+        buttonPanel.add(applySupplyButton);
+        buttonPanel.add(discardSupplyButton);
+        buttonPanel.add(backButtonToTrsnc);
+        sellProductMainPanel.add(productIdLabel, BorderLayout.NORTH);
+        sellProductMainPanel.add(inputPanel, BorderLayout.CENTER);
+        sellProductMainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(sellProductMainPanel);
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    public void displaySellProducts() {
+        JLabel productIdLabel = new JLabel("Sell Products");
+        productIdLabel.setHorizontalAlignment(JLabel.CENTER);
+        productIdLabel.setFont(productIdLabel.getFont().deriveFont(30f));
+
+        productIdField = new JTextField();
+        branchIdField = new JTextField();
+        customerIdField = new JTextField();
+        quantityField = new JTextField();
+        priceField = new JTextField();
+        
+        JPanel sellProductMainPanel = new JPanel(new BorderLayout());
+        sellProductMainPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+
+        inputPanel.add(new JLabel("Product ID:"));
+       
+
+        inputPanel.add(productIdField);
+        inputPanel.add(new JLabel("Branch ID:"));
+        inputPanel.add(branchIdField);
+        inputPanel.add(new JLabel("Customer ID:"));
+        inputPanel.add(customerIdField);
+        inputPanel.add(new JLabel("Quantity:"));
+        inputPanel.add(quantityField);
         inputPanel.add(new JLabel("Price per Item:"));
-        JTextField priceField = new JTextField();
         inputPanel.add(priceField);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JButton applyButton = new JButton("Apply");
-        JButton discardButton = new JButton("Discard");
-        buttonPanel.add(applyButton);
-        buttonPanel.add(discardButton);
+      
+        buttonPanel.add(applySellButton);
+        buttonPanel.add(discardSellButton);
         buttonPanel.add(backButtonToTrsnc);
         sellProductMainPanel.add(productIdLabel, BorderLayout.NORTH);
         sellProductMainPanel.add(inputPanel, BorderLayout.CENTER);
@@ -275,6 +369,43 @@ public class userView {
         frame.getContentPane().removeAll();
         frame.getContentPane().add(transferEmployeePanel, BorderLayout.CENTER);
         frame.getContentPane().add(BtnTrsfrPanel, BorderLayout.SOUTH);
+        frame.revalidate();
+        frame.repaint();
+    }
+    public void displayCustomerSupport() {
+        JLabel productIdLabel = new JLabel("Customer Support");
+        productIdLabel.setHorizontalAlignment(JLabel.CENTER);
+        productIdLabel.setFont(productIdLabel.getFont().deriveFont(30f));
+
+        cscustomerIDField = new JTextField();
+        csproductIDField = new JTextField();
+        csdescriptionField = new JTextArea();
+        
+        
+
+        JPanel sellProductMainPanel = new JPanel(new BorderLayout());
+        sellProductMainPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+
+        inputPanel.add(new JLabel("Customer ID:"));
+        inputPanel.add(cscustomerIDField);
+        inputPanel.add(new JLabel("Product ID:"));
+        inputPanel.add(csproductIDField);
+        inputPanel.add(new JLabel("description ID:"));
+        inputPanel.add(csdescriptionField);
+       
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+      
+        buttonPanel.add(applyCustomerSupportButton);
+        buttonPanel.add(discardCustomerSupportButton);
+        buttonPanel.add(backButtonToTrsnc);
+        sellProductMainPanel.add(productIdLabel, BorderLayout.NORTH);
+        sellProductMainPanel.add(inputPanel, BorderLayout.CENTER);
+        sellProductMainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(sellProductMainPanel);
         frame.revalidate();
         frame.repaint();
     }
@@ -326,5 +457,59 @@ public class userView {
     public void displayTransferFail(StringBuilder error) {
         JOptionPane.showMessageDialog(frame, error.toString(), "Transfer Fail", JOptionPane.ERROR_MESSAGE);
     }
+
+    public JTextField getProductIdField() {
+        return productIdField;
+    }
+
+    public JTextField getBranchIdField() {
+        return branchIdField;
+    }
+
+    public JTextField getCustomerIdField() {
+        return customerIdField;
+    }
+
+    public JTextField getQuantityField() {
+        return quantityField;
+    }
+
+    public JTextField getPriceField() {
+        return priceField;
+    }
+
+    public JTextField getSupplyIdField() {
+        return supplyIdField;
+    }
+
+    public JTextField getSupplySourceBranchIdField() {
+        return supplySourceBranchIdField;
+    }
+
+    public JTextField getSupplyDestinationBranchIdField() {
+        return supplyDestinationBranchIdField;
+    }
+
+    public JTextField getSupplyQuantityField() {
+        return supplyQuantityField;
+    }
+
+    public JTextField getSupplyPriceField() {
+        return supplyTransferPerson;
+    }
+
+    public JTextField getCscustomerIDField() {
+        return cscustomerIDField;
+    }
+
+    public JTextField getCsproductIDField() {
+        return csproductIDField;
+    }
+
+    public JTextArea getCsdescriptionField() {
+        return csdescriptionField;
+    }
+
+    
 
 }

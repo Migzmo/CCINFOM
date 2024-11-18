@@ -37,17 +37,18 @@ public class ComputerStoreController {
                 view.displaySellProducts();
             }
         });
-        this.view.addSupplyProductsListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                model.supplyProducts();
-            }
-        });
+        
         this.view.addTransferEmployeeListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displayTransferEmployeeForm();
                 view.disableAllMainBtns();
+            }
+        });
+        this.view.addSupplyProductsListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displaySupplyProducts();;
             }
         });
 
@@ -78,7 +79,35 @@ public class ComputerStoreController {
                 
             }
         });
+        this.view.setApplyCustomerSupportButton(new ActionListener() {
 
+            //need to replace this with actualy getting of values and integrating to model and stuff
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayCustomerSupport();
+            }
+        });
+        this.view.setApplySellButton(new ActionListener() {
+            //need to replace this with actualy getting of values and integrating to model and stuff
+            @Override
+            public void actionPerformed(ActionEvent e){
+                view.displaySellProducts();
+            }
+        });
+
+        this.view.setApplySupplyButtonListener(new ActionListener() {
+            //need to replace this with actualy getting of values and integrating to model and stuff
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displaySupplyProducts();
+            }
+        });
+        this.view.setDiscardSupplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displaySupplyProducts();
+            }
+        });
         this.view.discardTransferEmployeeListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,8 +125,14 @@ public class ComputerStoreController {
         this.view.addCustomerSupportListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.handleCustomerSupport();
+                view.displayCustomerSupport();
             }   
+        });
+        this.view.setDiscardCustomerSupportButton(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayCustomerSupport();
+            }
         });
 
         this.view.setTransactionsBackBtnListener(new ActionListener() {
@@ -111,6 +146,12 @@ public class ComputerStoreController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 model.generateReports();
+            }
+        });
+        this.view.setDiscardSellButton(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displaySellProducts();
             }
         });
     }
