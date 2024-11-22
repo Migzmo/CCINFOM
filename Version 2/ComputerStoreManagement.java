@@ -17,7 +17,17 @@ public class ComputerStoreManagement {
     private static final String DB_USER = "root"; // USE 'root' as the username
     private static final String DB_PASSWORD = ""; // ENTER YOUR MySQL PASSWORD HERE
 
-    // ----- Getters ----- 
+    /* 
+        *DELETE THIS WHEN ABT TO PASS*
+        Temp Code Structure:
+        1. Getters / Setters
+        2. Checkers
+        3. CRUD
+        4. Transactions
+        5. Reports
+    */ 
+    
+    // ----- Getters / Setters ----- 
 
     // Method to get the current department_id of the employee
     private static String getCurrentJobId(Connection connection, String employeeId) {
@@ -52,7 +62,7 @@ public class ComputerStoreManagement {
     }
 
     // ----- Checkers -----
-    
+
     // Method to check if employeeId exists in the database
     private static boolean isEmployeeIdValid(Connection connection, String employeeId) {
         String query = "SELECT COUNT(*) FROM employees WHERE employee_id = ?";

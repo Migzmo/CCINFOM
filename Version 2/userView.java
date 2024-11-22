@@ -28,7 +28,7 @@ public class userView {
     private JButton btnCustomerSupport;
     private JButton transactionsBackBtn;
 
-    //  Sell products
+    // Sell products
     private JTextField productIdField;
     private JTextField branchIdField;
     private JTextField customerIdField;
@@ -37,7 +37,7 @@ public class userView {
     private JButton applySellButton;
     private JButton discardSellButton;
 
-    // supply products
+    // Supply products
     private JTextField supplyIdField;
     private JTextField supplySourceBranchIdField;
     private JTextField supplyDestinationBranchIdField;
@@ -46,7 +46,7 @@ public class userView {
     private JButton applySupplyButton;
     private JButton discardSupplyButton;
     
-    //customer support
+    // Customer support
     private JTextField cscustomerIDField;
     private JTextField csproductIDField;
     private JTextArea csdescriptionField;
@@ -501,6 +501,5 @@ public class userView {
         return csdescriptionField;
     }
 
-    
 
 }
