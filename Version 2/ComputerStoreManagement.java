@@ -12,7 +12,7 @@ public class ComputerStoreManagement {
     private static final String DB_USER = "root"; // USE 'root' as the username
     private static final String DB_PASSWORD = ""; // ENTER YOUR MySQL PASSWORD HERE
 
-    public boolean createEmployee(String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
+    public static boolean createEmployee(String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
                 // Get the last employee_id from the employees table
                 String getEmployeeIdQuery = "SELECT MAX(employee_id) FROM employees";
@@ -26,15 +26,16 @@ public class ComputerStoreManagement {
                 }
         
                 // Insert the new transfer record with the incremented emp_transfer_id
-                String query = "INSERT INTO Employees (employee_firstname, employee_lastname, branch_id, job_id, department_id, hire_date) VALUES (?, ?, ?, ?, ?, ?)";
+                String query = "INSERT INTO Employees (employee_id, employee_firstname, employee_lastname, branch_id, job_id, department_id, hire_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setString(1, firstName);
-                    preparedStatement.setString(2, lastName);
-                    preparedStatement.setInt(3, Integer.parseInt(branchId));
-                    preparedStatement.setInt(4, Integer.parseInt(jobId));
-                    preparedStatement.setInt(5, Integer.parseInt(departmentId));
-                    preparedStatement.setDate(6, Date.valueOf(hireDate));
+                    preparedStatement.setInt(1, nextEmpId);
+                    preparedStatement.setString(2, firstName);
+                    preparedStatement.setString(3, lastName);
+                    preparedStatement.setInt(4, Integer.parseInt(branchId));
+                    preparedStatement.setInt(5, Integer.parseInt(jobId));
+                    preparedStatement.setInt(6, Integer.parseInt(departmentId));
+                    preparedStatement.setDate(7, Date.valueOf(hireDate));
                     preparedStatement.executeUpdate();
                     JOptionPane.showMessageDialog(null, "Added Successfully to the Employee Record.");
                 }
