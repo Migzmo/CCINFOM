@@ -6,18 +6,132 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.*;
 
-//the MODEL of the gui basically where the brain works
+/**
+ * The ComputerStoreManagement class provides methods to manage a collection of computer stores.
+ * It includes functionality for creating, reading, updating, and deleting records in the database.
+ * This class interacts with a MySQL database to perform various operations related to employees,
+ * products, branches, customers, and transactions.
+ */
 public class ComputerStoreManagement {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/db_computer_store";
     private static final String DB_USER = "root"; // USE 'root' as the username
     private static final String DB_PASSWORD = ""; // ENTER YOUR MySQL PASSWORD HERE
 
+    // ----- Getters ----- 
+
+    // Method to get the current department_id of the employee
+    private static String getCurrentJobId(Connection connection, String employeeId) {
+        String query = "SELECT job_id FROM employees WHERE employee_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, Integer.parseInt(employeeId));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("job_id");
+                }
+            }
+        } catch (Exception ex) {
+            // Handle exception if needed
+        }
+        return null; // Return null if no department is found or an error occurs
+    }
+    
+    // Method to get the current department_id of the employee
+    private static String getCurrentDepartmentId(Connection connection, String employeeId) {
+        String query = "SELECT department_id FROM employees WHERE employee_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, Integer.parseInt(employeeId));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("department_id");
+                }
+            }
+        } catch (Exception ex) {
+            // Handle exception if needed
+        }
+        return null; // Return null if no department is found or an error occurs
+    }
+
+    // ----- Checkers -----
+    
+    // Method to check if employeeId exists in the database
+    private static boolean isEmployeeIdValid(Connection connection, String employeeId) {
+        String query = "SELECT COUNT(*) FROM employees WHERE employee_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, Integer.parseInt(employeeId));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            // Handle exception if needed
+        }
+        // JOptionPane.showMessageDialog(null, "Error: Employee ID does not exist. Please try again.");
+        return false;
+    }
+    
+    // Method to check if branchId exists in the database
+    private static boolean isBranchIdValid(Connection connection, String branchId) {
+        String query = "SELECT COUNT(*) FROM branches WHERE branch_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, Integer.parseInt(branchId));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            // Handle exception if needed
+        }
+        // JOptionPane.showMessageDialog(null, "Error: Branch ID does not exist. Please try again.");
+        return false;
+    }
+    
+    // Method to check if new_job_id exists in the database
+    private static boolean isJobIdValid(Connection connection, String jobId) {
+        String query = "SELECT COUNT(*) FROM jobs WHERE job_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, jobId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            // Handle exception if needed
+        }
+        return false;
+    }
+
+    // Method to check if departmentId exists in the database
+    private static boolean isDepartmentIdValid(Connection connection, String departmentId) {
+        String query = "SELECT COUNT(*) FROM departments WHERE department_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, Integer.parseInt(departmentId));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            // Handle exception if needed
+        }
+        // JOptionPane.showMessageDialog(null, "Error: Department ID does not exist. Please try again.");
+        return false;
+    }
+
+
+    // ---- CRUD -----
+
+    // Creates a new employee record in the database. 
     public boolean createEmployee(String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
+        // Establish a connection to the database using the provided URL, username, and password.
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                // Get the last employee_id from the employees table
+                // Query to get the maximum employee_id from the employees table
                 String getEmployeeIdQuery = "SELECT MAX(employee_id) FROM employees";
                 int nextEmpId = 1;  // Default value if the table is empty
                 
+                // Execute the query to get the maximum employee_id
                 try (Statement statement = connection.createStatement();
                     ResultSet resultSet = statement.executeQuery(getEmployeeIdQuery)) {
                     if (resultSet.next()) {
@@ -40,8 +154,8 @@ public class ComputerStoreManagement {
                     JOptionPane.showMessageDialog(null, "Added Successfully to the Employee Record.");
                 }
         
+                // Return true if the operation was successful.
                 return true;
-            
         } catch (Exception ex) {
             return false;
         }
@@ -99,6 +213,8 @@ public class ComputerStoreManagement {
             return false;
         }
     }
+
+    // ----- Transactions ------
     
     public void sellProducts() {
         String productId = JOptionPane.showInputDialog("Enter Product ID:");
@@ -118,7 +234,7 @@ public class ComputerStoreManagement {
 
     }
 
-    public boolean validTransfer (String employeeId, String newBranchId, String newJobId, String departmentId, String reason, StringBuilder error) {
+    public boolean validTransfer(String employeeId, String newBranchId, String newJobId, String departmentId, String reason, StringBuilder error) {
         boolean valid = true;
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)){
             
@@ -208,111 +324,14 @@ public class ComputerStoreManagement {
         }
     }
     
-    // Method to check if employeeId exists in the database
-    private static boolean isEmployeeIdValid(Connection connection, String employeeId) {
-        String query = "SELECT COUNT(*) FROM employees WHERE employee_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, Integer.parseInt(employeeId));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next() && rs.getInt(1) > 0) {
-                    return true;
-                }
-            }
-        } catch (Exception ex) {
-            // Handle exception if needed
-        }
-        // JOptionPane.showMessageDialog(null, "Error: Employee ID does not exist. Please try again.");
-        return false;
-    }
-    
-    // Method to check if branchId exists in the database
-    private static boolean isBranchIdValid(Connection connection, String branchId) {
-        String query = "SELECT COUNT(*) FROM branches WHERE branch_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, Integer.parseInt(branchId));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next() && rs.getInt(1) > 0) {
-                    return true;
-                }
-            }
-        } catch (Exception ex) {
-            // Handle exception if needed
-        }
-        // JOptionPane.showMessageDialog(null, "Error: Branch ID does not exist. Please try again.");
-        return false;
-    }
-    
-    // Method to check if new_job_id exists in the database
-    private static boolean isJobIdValid(Connection connection, String jobId) {
-        String query = "SELECT COUNT(*) FROM jobs WHERE job_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, jobId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next() && rs.getInt(1) > 0) {
-                    return true;
-                }
-            }
-        } catch (Exception ex) {
-            // Handle exception if needed
-        }
-        return false;
-    }
-
-    // Method to check if departmentId exists in the database
-    private static boolean isDepartmentIdValid(Connection connection, String departmentId) {
-        String query = "SELECT COUNT(*) FROM departments WHERE department_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, Integer.parseInt(departmentId));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next() && rs.getInt(1) > 0) {
-                    return true;
-                }
-            }
-        } catch (Exception ex) {
-            // Handle exception if needed
-        }
-        // JOptionPane.showMessageDialog(null, "Error: Department ID does not exist. Please try again.");
-        return false;
-    }
-
-    // Method to get the current department_id of the employee
-    private static String getCurrentJobId(Connection connection, String employeeId) {
-        String query = "SELECT job_id FROM employees WHERE employee_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, Integer.parseInt(employeeId));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("job_id");
-                }
-            }
-        } catch (Exception ex) {
-            // Handle exception if needed
-        }
-        return null; // Return null if no department is found or an error occurs
-    }
-    
-    // Method to get the current department_id of the employee
-    private static String getCurrentDepartmentId(Connection connection, String employeeId) {
-        String query = "SELECT department_id FROM employees WHERE employee_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, Integer.parseInt(employeeId));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("department_id");
-                }
-            }
-        } catch (Exception ex) {
-            // Handle exception if needed
-        }
-        return null; // Return null if no department is found or an error occurs
-    }
-
     public void handleCustomerSupport() {
         String customerId = JOptionPane.showInputDialog("Enter Customer ID:");
         String productId = JOptionPane.showInputDialog("Enter Product ID:");
         String description = JOptionPane.showInputDialog("Enter Issue Description:");
 
     }
+
+    // ----- Reports -----
 
     public boolean generateStockReport(String branchId, String month, String year) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
