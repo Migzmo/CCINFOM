@@ -12,7 +12,7 @@ public class ComputerStoreManagement {
     private static final String DB_USER = "root"; // USE 'root' as the username
     private static final String DB_PASSWORD = ""; // ENTER YOUR MySQL PASSWORD HERE
 
-    public static boolean createEmployee(String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
+    public boolean createEmployee(String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
                 // Get the last employee_id from the employees table
                 String getEmployeeIdQuery = "SELECT MAX(employee_id) FROM employees";
