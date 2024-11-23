@@ -1,10 +1,8 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 
-/**
- * The ComputerStoreController class acts as the controller in the Model-View-Controller (MVC) pattern.
- * It is responsible for handling user interactions from the userView and updating the model accordingly.
- */
+// the controller or the middleman of both the model and the view
 public class ComputerStoreController {
     private ComputerStoreManagement model;
     private userView view;
@@ -16,17 +14,11 @@ public class ComputerStoreController {
         this.view.setRecordsManagementBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.displayRecordsManagement();
+                view.displayPickManagement();
             }
         });
 
         this.view.setTransactionsBtnListener(new ActionListener() {
-            /**
-             * Handles the action event when the "Transactions" button in the master UI panel is pressed.
-             * 
-             * It displays the UI for transactions, where the user can sell products, supply products, 
-             * transfer employees, and perform customer support.
-             */ 
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displayTransactions();
@@ -41,11 +33,6 @@ public class ComputerStoreController {
         });
 
         this.view.addSellProductsListener(new ActionListener() {
-            /**
-             * Handles the action event when the "Sell Products" button is pressed.
-             * 
-             * It displays the UI for selling products.
-             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displaySellProducts();
@@ -53,11 +40,6 @@ public class ComputerStoreController {
         });
         
         this.view.addTransferEmployeeListener(new ActionListener() {
-            /**
-             * Handles the action event when the "Transfer Employee" button is pressed.
-             * 
-             * It displays the UI for transferring employees and disables all main buttons.
-             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displayTransferEmployeeForm();
@@ -65,11 +47,6 @@ public class ComputerStoreController {
             }
         });
         this.view.addSupplyProductsListener(new ActionListener() {
-            /**
-             * Handles the action event when the "Supply Products" button is pressed.
-             * 
-             * It displays the UI for supplying products.
-             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displaySupplyProducts();;
@@ -77,11 +54,6 @@ public class ComputerStoreController {
         });
 
         this.view.applyTransferEmployeeListener(new ActionListener() {
-            /**
-             * Handles the action event when the "Apply Transfer Employee" button is pressed.
-             * 
-             * It validates and applies the employee transfer, displaying success or failure messages.
-             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 String employeeId = view.getEmployeeIdField().getText();
@@ -107,17 +79,16 @@ public class ComputerStoreController {
                 
             }
         });
-
         this.view.setApplyCustomerSupportButton(new ActionListener() {
-            // need to replace this with actualy getting of values and integrating to model and stuff
+
+            //need to replace this with actualy getting of values and integrating to model and stuff
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displayCustomerSupport();
             }
         });
-        
         this.view.setApplySellButton(new ActionListener() {
-            // need to replace this with actualy getting of values and integrating to model and stuff
+            //need to replace this with actualy getting of values and integrating to model and stuff
             @Override
             public void actionPerformed(ActionEvent e){
                 view.displaySellProducts();
@@ -125,20 +96,18 @@ public class ComputerStoreController {
         });
 
         this.view.setApplySupplyButtonListener(new ActionListener() {
-            // need to replace this with actualy getting of values and integrating to model and stuff
+            //need to replace this with actualy getting of values and integrating to model and stuff
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displaySupplyProducts();
             }
         });
-
         this.view.setDiscardSupplyButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displaySupplyProducts();
             }
         });
-
         this.view.discardTransferEmployeeListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -153,14 +122,12 @@ public class ComputerStoreController {
                 view.displayTransactions();
             }
         });
-
         this.view.addCustomerSupportListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displayCustomerSupport();
             }   
         });
-
         this.view.setDiscardCustomerSupportButton(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -178,10 +145,9 @@ public class ComputerStoreController {
         this.view.setGenerateReportsBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // model.generateStockReport();
+                //model.generateReports();
             }
         });
-
         this.view.setDiscardSellButton(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -189,15 +155,41 @@ public class ComputerStoreController {
             }
         });
 
-        this.view.setCreateButtonListener(new ActionListener(){
+        this.view.setCreateEmployeeButtonListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
-                view.displayCreateRecordForm();
+                view.displayCreateEmployeeForm();
             }
         });
 
+        this.view.setReadEmployeeButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                view.displayReadEmployeeForm();
+            }
+        });
+
+        this.view.setemployeeRecordButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayEmployeeRecordsManagement();
+
+            }
+        });
+        this.view.setbacktoManagePickBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayPickManagement();
+            }
+        });
+        this.view.setUpdateEmployeeButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayUpdateEmployeeForm();
+            }
+        });
         // This is for creating a new employee
-        this.view.setCreateApplyButtonListener(new ActionListener(){
+        this.view.setCreateEmployeeApplyButtonListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 String firstName = view.getCreateFirstNameFld().getText();
@@ -215,5 +207,92 @@ public class ComputerStoreController {
 
             }
         });
+
+        this.view.setReadEmployeeApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String employeeId = view.getReadEmployeeIdFld().getText();
+                if(model.readEmployee(employeeId)){
+                    view.displayReadSuccess();
+                } else {
+                    view.displayReadFail();
+                }
+            }
+        });
+        this.view.setUpdateEmployeeApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String employeeId = view.getUpdateEmployeeIdFld().getText();
+                String firstName = view.getUpdateFirstNameFld().getText();
+                String lastName = view.getUpdateLastNameFld().getText();
+                String branchID = view.getUpdateBranchIdFld().getText();
+                String JobId = view.getUpdateJobIDfld().getText();
+                String depID = view.getUpdateDepartmentIDFld().getText();
+                String hireDate = view.getUpdateHireDateFld().getText();
+                if(model.updateEmployee(employeeId, firstName, lastName, branchID, JobId, depID, hireDate)){
+                    view.displayUpdateSuccess();
+                } else {
+                    view.displayUpdateFail();
+                }
+            }
+        });
+        this.view.setDeleteEmployeeButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayDeleteEmployeeForm();
+            }
+        });
+        this.view.setDeleteEmployeeApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int response = JOptionPane.showConfirmDialog(
+                    null,
+                    "Are you sure you want to delete this employee?",
+                    "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+        
+                if (response == JOptionPane.YES_OPTION) {
+                    // Call the method to delete the employee
+                    String employeeId = view.getDeleteEmployeeIdFld().getText();
+                    if(model.deleteEmployee(employeeId)){
+                        view.displayDeleteSuccess();
+                    } else {
+                        view.displayDeleteFail();
+                    }
+                    
+                }
+            }
+        });
+        this.view.setDeleteEmployeeDiscardButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.clearDeleteEmployeeForm();
+             
+            }
+        });
+        this.view.setCreateEmployeeDiscardButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.clearCreateEmployeeForm();
+                
+            }
+        });
+        this.view.setReadEmployeeDiscardButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.clearCreateEmployeeForm();
+               
+            }
+        });
+        this.view.setUpdateEmployeeDiscardButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.clearUpdateEmployeeForm();
+               
+            }
+        });
+
     }
 }
