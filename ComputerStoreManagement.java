@@ -387,6 +387,113 @@ public class ComputerStoreManagement {
         }
     }
 
+    public boolean createBranchRecord(String branch_name, String location, int contact_number, int manager_id) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // Query to get the maximum branch_id from the Branches table.
+            String getBranchIdQuery = "SELECT MAX(branch_id) FROM Branches";
+            int nextBranchId = 1;  // Default value if the table is empty
+            
+            // Execute the query to get the maximum branch_id.
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(getBranchIdQuery)) {
+                if (resultSet.next()) {
+                    nextBranchId = resultSet.getInt(1) + 1;  // Increment last branch_id
+                }
+            }
+    
+            // Insert the new branch record with the incremented branch_id.
+            String query = "INSERT INTO Branches (branch_id, branch_name, location, contact_number, manager_id) VALUES (?, ?, ?, ?, ?)";
+            
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, nextBranchId);
+                preparedStatement.setString(2, branch_name);
+                preparedStatement.setString(3, location);
+                preparedStatement.setInt(4, contact_number);
+                preparedStatement.setInt(5, manager_id);
+                preparedStatement.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Added Successfully to the Branch Record.");
+            }
+    
+            // Return true if the operation was successful.
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to add the branch record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    public boolean readBranchRecord(String branchId) {
+        String query = "SELECT * FROM Branches WHERE branch_id = ?";
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, Integer.parseInt(branchId));
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    String record = "Branch ID: " + rs.getInt("branch_id") + "\n" +
+                                    "Branch Name: " + rs.getString("branch_name") + "\n" +
+                                    "Location: " + rs.getString("location") + "\n" +
+                                    "Contact Number: " + rs.getString("contact_number") + "\n" +
+                                    "Manager ID: " + rs.getInt("manager_id");
+                    JOptionPane.showMessageDialog(null, "View Branch Record\n" + record);
+                    return true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Branch Record Not Found!");
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to read the branch record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+
+    public boolean updateBranchRecord(String branch_id, String branch_name, String location, int contact_number, int manager_id) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            if (isBranchIdValid(connection, branch_id)) {
+                String query = "UPDATE Branches SET branch_name = ?, location = ?, contact_number = ?, manager_id = ? WHERE branch_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, branch_name);
+                    preparedStatement.setString(2, location);
+                    preparedStatement.setInt(3, contact_number);
+                    preparedStatement.setInt(4, manager_id);
+                    preparedStatement.setInt(5, Integer.parseInt(branch_id));
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Branch Record Updated Successfully!");
+                    return true;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Branch Record Not Found.");
+                return false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to update the branch record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    public boolean deleteBranchRecord(String branch_id) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            if (isBranchIdValid(connection, branch_id)) {
+                String query = "DELETE FROM Branches WHERE branch_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setInt(1, Integer.parseInt(branch_id));
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Branch Record Deleted Successfully!");
+                    return true;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Branch Record Not Found.");
+                return false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to delete the branch record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
     // Creates a new employee record in the database. 
     public boolean createEmployee(String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
         // Establish a connection to the database using the provided URL, username, and password.
