@@ -28,7 +28,7 @@ public class userView {
     private JButton btnCustomerSupport;
     private JButton transactionsBackBtn;
 
-    //  Sell products
+    // Sell products
     private JTextField productIdField;
     private JTextField branchIdField;
     private JTextField customerIdField;
@@ -37,7 +37,7 @@ public class userView {
     private JButton applySellButton;
     private JButton discardSellButton;
 
-    // supply products
+    // Supply products
     private JTextField supplyIdField;
     private JTextField supplySourceBranchIdField;
     private JTextField supplyDestinationBranchIdField;
@@ -46,7 +46,7 @@ public class userView {
     private JButton applySupplyButton;
     private JButton discardSupplyButton;
     
-    //customer support
+    // Customer support
     private JTextField cscustomerIDField;
     private JTextField csproductIDField;
     private JTextArea csdescriptionField;
@@ -54,32 +54,13 @@ public class userView {
     private JButton discardCustomerSupportButton;
 
     // idk yet
-    private JButton exitButton;
     private JButton backButtonToTrsnc;
-    //Record management Buttons
-    private JButton createBtn;
-    private JButton readBtn;
-    private JButton updtBtn;
-    private JButton dltBtn;
-    private JButton createApplyBtn;
-    private JButton dscrdBtn;
-    private JPanel promptPanel;
-    
-    private JTextField createFirstNameFld;
-    private JTextField createLastNameFld;
-    private JTextField createbranchIdFld;
-    private JTextField createJobIDfld;
-    private JTextField createDepartmentIDFld;
-    private JTextField createHireDateFld;
-    
 
-    
     // idk yet
     private JPanel BtnTrsfrPanel;
     private JButton applyTrnsfrButton;
     private JButton discardTrnsfrButton;
     private JTextField employeeIdField;
-    private JTextField oldBranchIdField;
     private JTextField newBranchIdField;
     private JTextField newJobIdField;
     private JTextField departmentIdField;
@@ -146,31 +127,6 @@ public class userView {
         //customer support
         applyCustomerSupportButton = new JButton("Apply");
         discardCustomerSupportButton = new JButton("Discard");
-        // records management
-        createBtn = new JButton("Create");
-        readBtn = new JButton("Read");
-        updtBtn = new JButton("Update");
-        dltBtn = new JButton("Delete");
-        createApplyBtn = new JButton("Create");
-        dscrdBtn = new JButton("Discard");
-
-
-        //create fields
-        createFirstNameFld = new JTextField();
-        createLastNameFld = new JTextField();
-        createbranchIdFld = new JTextField();
-        createJobIDfld = new JTextField();
-        createDepartmentIDFld = new JTextField();
-        createHireDateFld = new JTextField();
-
-        createBtn.setPreferredSize(new Dimension(150,30));
-        readBtn.setPreferredSize(new Dimension(150,30));
-        updtBtn.setPreferredSize(new Dimension(150,30));
-        dltBtn.setPreferredSize(new Dimension(150,30));
-
-        promptPanel = new JPanel(new FlowLayout());
-        promptPanel.setBackground(Color.LIGHT_GRAY);
-        promptPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Adds MainUIPanel to frame.
         frame.add(mainUIPanel);
@@ -204,24 +160,7 @@ public class userView {
     public void setApplySellButton(ActionListener listener) {
         applySellButton.addActionListener(listener);
     }
-    public void setCreateButtonListener(ActionListener listener) {
-        createBtn.addActionListener(listener);
-    }
-    public void setReadButtonListener(ActionListener listener) {
-        readBtn.addActionListener(listener);
-    }
-    public void setUpdateButtonListener(ActionListener listener) {
-        updtBtn.addActionListener(listener);
-    }
-    public void setDeleteButtonListener(ActionListener listener) {
-        dltBtn.addActionListener(listener);
-    }
-    public void setCreateApplyButtonListener(ActionListener listener){
-        createApplyBtn.addActionListener(listener);
-    }
-    public void setDscrdBtnListener(ActionListener listener){
-        dscrdBtn.addActionListener(listener);
-    }
+
     public void setDiscardSellButton(ActionListener listener) {
         discardSellButton.addActionListener(listener);
     }
@@ -400,7 +339,6 @@ public class userView {
         JPanel transferEmployeePanel = new JPanel(new GridLayout(7, 2, 10, 10));
 
         employeeIdField = new JTextField();
-        oldBranchIdField = new JTextField();
         newBranchIdField = new JTextField();
         newJobIdField = new JTextField();
         departmentIdField = new JTextField();
@@ -408,13 +346,11 @@ public class userView {
 
         transferEmployeePanel.add(new JLabel("Employee ID:"));
         transferEmployeePanel.add(employeeIdField);
-        transferEmployeePanel.add(new JLabel("Old Branch ID:"));
-        transferEmployeePanel.add(oldBranchIdField);
         transferEmployeePanel.add(new JLabel("New Branch ID:"));
         transferEmployeePanel.add(newBranchIdField);
-        transferEmployeePanel.add(new JLabel("New Job ID:"));
+        transferEmployeePanel.add(new JLabel("New Job ID (if not applicable, enter 0):"));
         transferEmployeePanel.add(newJobIdField);
-        transferEmployeePanel.add(new JLabel("New Department ID (if applicable):"));
+        transferEmployeePanel.add(new JLabel("New Department ID (if not applicable, enter 0):"));
         transferEmployeePanel.add(departmentIdField);
         transferEmployeePanel.add(new JLabel("Reason for Transfer:"));
         transferEmployeePanel.add(reasonField);
@@ -469,152 +405,9 @@ public class userView {
         frame.repaint();
     }
 
-    public void displayRecordsManagement(){
-        JLabel managementLabel = new JLabel("Records Management");
-        managementLabel.setHorizontalAlignment(JLabel.CENTER);
-        managementLabel.setFont(managementLabel.getFont().deriveFont(15f));
-
-        JPanel managementPanel = new JPanel(new BorderLayout());
-        managementPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
-
-        JPanel manageRecordUiPanel = new JPanel();
-        manageRecordUiPanel = new JPanel(new GridLayout(6, 1, 0, 20));
-        manageRecordUiPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
-
-        createBtn.setFocusable(false);
-        readBtn.setFocusable(false);
-        updtBtn.setFocusable(false);
-        dltBtn.setFocusable(false);
-
-        manageRecordUiPanel.add(managementLabel);
-        manageRecordUiPanel.add(createBtn);
-        manageRecordUiPanel.add(readBtn);
-        manageRecordUiPanel.add(updtBtn);
-        manageRecordUiPanel.add(dltBtn);
-        manageRecordUiPanel.add(transactionsBackBtn);
-
-        
-
-        JPanel promptPlaceHolder = new JPanel();
-        promptPlaceHolder.setLayout(new GridLayout(2, 1, 0, 10));
-        promptPlaceHolder.setPreferredSize(new Dimension(250,80));
-        promptPlaceHolder.setBackground(Color.LIGHT_GRAY);
-
-        JLabel promptLabel = new JLabel("Select an action to perform");
-        promptLabel.setHorizontalAlignment(JLabel.CENTER);
-        
-        promptPlaceHolder.add(promptLabel);
-        promptPanel.add(promptPlaceHolder);
-
-        JSplitPane managementSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, manageRecordUiPanel, promptPanel);
-        managementSplitPane.setResizeWeight(0.5);
-        managementSplitPane.setDividerLocation(250);
-        managementSplitPane.setEnabled(false);
-        managementPanel.add(managementSplitPane);
-
-        frame.getContentPane().removeAll();
-        frame.add(managementPanel);
-        frame.revalidate();
-        frame.repaint();
-
-    }
-
-    public void displayCreateRecordForm() {
-        // Use GridBagLayout for alignment
-        JPanel newRecordPanel = new JPanel(new GridBagLayout());
-        newRecordPanel.setBackground(Color.LIGHT_GRAY);
-        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
-        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
-        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
-
-        gbc.weightx = 0;
-        gbc.weighty = 0;
-
-        // Add Product ID label and field
-        gbc.gridx = 0; gbc.gridy = 0;
-        newRecordPanel.add(new JLabel("First name:"));
-
-        gbc.gridx = 1;
-        gbc.weightx = 1; // Allow text fields to expand horizontally
-        newRecordPanel.add(createFirstNameFld, gbc);
-
-        // Add Branch ID label and field
-        gbc.gridx = 0; gbc.gridy = 1;
-        gbc.weightx = 0;
-        newRecordPanel.add(new JLabel("Last name:"), gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 1;
-        newRecordPanel.add(createLastNameFld, gbc);
-
-        // Add Customer ID label and field
-        gbc.gridx = 0; gbc.gridy = 2;
-        gbc.weightx = 0;
-        newRecordPanel.add(new JLabel("Branch ID:"), gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 1;
-        newRecordPanel.add(createbranchIdFld, gbc);
-
-        // Add Quantity label and field
-        gbc.gridx = 0; gbc.gridy = 3;
-        gbc.weightx = 0;
-        newRecordPanel.add(new JLabel("Job ID:"), gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 1;
-        newRecordPanel.add(createJobIDfld, gbc);
-
-        // Add Price per Item label and field
-        gbc.gridx = 0; gbc.gridy = 4;
-        gbc.weightx = 0;
-        newRecordPanel.add(new JLabel("Department ID"), gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 1;
-        newRecordPanel.add(createDepartmentIDFld, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 5;
-        gbc.weightx = 0;
-        newRecordPanel.add(new JLabel("hireDate"), gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 1;
-        newRecordPanel.add(createHireDateFld, gbc);
-
-
-        // Add buttons (Create and Discard)
-        gbc.gridx = 0; gbc.gridy = 6;
-        gbc.gridwidth = 1;
-        gbc.weightx = 0; // Buttons should not expand
-        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
-        newRecordPanel.add(createApplyBtn, gbc);
-
-        gbc.gridx = 1;
-        newRecordPanel.add(dscrdBtn, gbc);
-
-    
-        // Update promptPanel
-        promptPanel.setLayout(new BorderLayout());
-        promptPanel.removeAll();
-        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
-        
-        frame.revalidate();
-        frame.repaint();
-    }
-
-
     // Getters and Setters
     public JTextField getEmployeeIdField() {
         return employeeIdField;
-    }
-
-    public JTextField getOldBranchIdField() {
-        return oldBranchIdField;
     }
 
     public JTextField getNewBranchIdField() {
@@ -708,41 +501,5 @@ public class userView {
         return csdescriptionField;
     }
 
-    
-
-    public JTextField getCreateFirstNameFld() {
-        return createFirstNameFld;
-    }
-
-    public JTextField getCreateLastNameFld() {
-        return createLastNameFld;
-    }
-
-    public JTextField getCreatebranchIdFld() {
-        return createbranchIdFld;
-    }
-
-    public JTextField getCreateJobIDfld() {
-        return createJobIDfld;
-    }
-
-    public JTextField getCreateDepartmentIDFld() {
-        return createDepartmentIDFld;
-    }
-
-    public JTextField getCreateHireDateFld() {
-        return createHireDateFld;
-    }
-    public void displayCreateSuccess() {
-        JOptionPane.showMessageDialog(frame, "Record created successfully", "Create Success", JOptionPane.INFORMATION_MESSAGE);
-    }
-    public void displayCreateFail() {
-        JOptionPane.showMessageDialog(frame, "Record not created", "Create Fail", JOptionPane.ERROR_MESSAGE);
-    }
-
-    
-    
-
-    
 
 }
