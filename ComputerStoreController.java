@@ -79,12 +79,21 @@ public class ComputerStoreController {
                 
             }
         });
-        this.view.setApplyCustomerSupportButton(new ActionListener() {
+        
 
-            //need to replace this with actualy getting of values and integrating to model and stuff
+        this.view.setApplyCustomerSupportButton(new ActionListener() {
+            
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.displayCustomerSupport();
+                String customerId = view.getCscustomerIDField().getText();
+                String productId = view.getCsproductIDField().getText();
+                String description = view.getCsdescriptionField().getText();
+                if(model.createTicket(customerId, productId, description )){
+                    view.displayTicketSuccess();
+                } else {
+                    view.displayTicketFail();
+                }
+                view.clearTicketForm();
             }
         });
         this.view.setApplySellButton(new ActionListener() {

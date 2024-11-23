@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -16,8 +17,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ComputerStoreManagement {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/db_computer_store";
-    private static final String DB_USER = "root"; // USE 'root' as the username
-    private static final String DB_PASSWORD = ""; // ENTER YOUR MySQL PASSWORD HERE
+    private static final String DB_USER = "sqluser"; // USE 'root' as the username
+    private static final String DB_PASSWORD = "password"; // ENTER YOUR MySQL PASSWORD HERE
 
     // ----- Getters ----- 
 
@@ -387,7 +388,7 @@ public class ComputerStoreManagement {
         }
     }
 
-    public boolean createBranchRecord(String branch_name, String location, Long contact_number, int manager_id) {
+    public boolean createBranchRecord(String branch_name, String location, long contact_number, int manager_id) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             // Query to get the maximum branch_id from the Branches table.
             String getBranchIdQuery = "SELECT MAX(branch_id) FROM Branches";
@@ -433,7 +434,7 @@ public class ComputerStoreManagement {
                     String record = "Branch ID: " + rs.getInt("branch_id") + "\n" +
                                     "Branch Name: " + rs.getString("branch_name") + "\n" +
                                     "Location: " + rs.getString("location") + "\n" +
-                                    "Contact Number: " + rs.getLong("contact_number") + "\n" +
+                                    "Contact Number: " + rs.getInt("contact_number") + "\n" +
                                     "Manager ID: " + rs.getInt("manager_id");
                     JOptionPane.showMessageDialog(null, "View Branch Record\n" + record);
                     return true;
@@ -448,7 +449,7 @@ public class ComputerStoreManagement {
         return false;
     }
 
-    public boolean updateBranchRecord(String branch_id, String branch_name, String location, Long contact_number, int manager_id) {
+    public boolean updateBranchRecord(String branch_id, String branch_name, String location, long contact_number, int manager_id) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             if (isBranchIdValid(connection, branch_id)) {
                 String query = "UPDATE Branches SET branch_name = ?, location = ?, contact_number = ?, manager_id = ? WHERE branch_id = ?";
@@ -685,6 +686,80 @@ public class ComputerStoreManagement {
         }
     }
 
+    public boolean createTicket(String customerId, String productId, String description) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            
+            // Check if the product is still in warranty
+            String checkWarrantyQuery = "SELECT cp.warranty_duration, s.sale_date " +
+                                        "FROM sales s " +
+                                        "JOIN computerparts cp ON s.product_id = cp.product_id " +
+                                        "WHERE s.product_id = ? AND s.customer_id = ?";
+            PreparedStatement warrantyStmt = connection.prepareStatement(checkWarrantyQuery);
+            warrantyStmt.setInt(1, Integer.parseInt(productId));
+            warrantyStmt.setInt(2, Integer.parseInt(customerId));
+    
+            ResultSet warrantyResult = warrantyStmt.executeQuery();
+    
+            if (warrantyResult.next()) {
+                int warrantyDuration = warrantyResult.getInt("warranty_duration");
+                Date saleDate = warrantyResult.getDate("sale_date");
+                Date currentDate = new Date(System.currentTimeMillis());
+    
+                long diffInMillies = Math.abs(currentDate.getTime() - saleDate.getTime());
+                long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    
+                if (diffInDays <= warrantyDuration * 365) { // Assuming warranty_duration is in years
+                    // Product is still in warranty
+                    String getCustomerNameQuery = "SELECT customer_firstname, customer_lastname FROM customers WHERE customer_id = ?";
+                    PreparedStatement customerStmt = connection.prepareStatement(getCustomerNameQuery);
+                    customerStmt.setInt(1, Integer.parseInt(customerId));
+    
+                    ResultSet customerResult = customerStmt.executeQuery();
+    
+                    if (customerResult.next()) {
+                        String customerName = customerResult.getString("customer_firstname") + " " + customerResult.getString("customer_lastname");
+    
+                        // Generate the next ticket_id
+                        String getMaxTicketIdQuery = "SELECT MAX(ticket_id) FROM SupportTickets";
+                        Statement maxTicketIdStmt = connection.createStatement();
+                        ResultSet maxTicketIdResult = maxTicketIdStmt.executeQuery(getMaxTicketIdQuery);
+                        int nextTicketId = 1; // Default value if the table is empty
+                        if (maxTicketIdResult.next()) {
+                            nextTicketId = maxTicketIdResult.getInt(1) + 1;
+                        }
+    
+                        // Record the support ticket
+                        String recordSupportTicket = "INSERT INTO SupportTickets (ticket_id, customer_id, sales_id, issue_description, ticket_status, ticket_opened_date) " +
+                                                     "VALUES (?, ?, ?, ?, 'ONGOING', NOW())";
+                        PreparedStatement supportStmt = connection.prepareStatement(recordSupportTicket);
+                        supportStmt.setInt(1, nextTicketId);
+                        supportStmt.setInt(2, Integer.parseInt(customerId));
+                        supportStmt.setInt(3, Integer.parseInt(productId));
+                        supportStmt.setString(4, description);
+                        supportStmt.executeUpdate();
+    
+                        JOptionPane.showMessageDialog(null, "Support ticket created successfully for " + customerName);
+                        return true;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Customer not found!");
+                        return false;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Product is out of warranty!");
+                    return false;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Sales record not found!");
+                return false;
+            }
+    
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+            return false;
+        }
+    }
+
     public void supplyProducts() {
         String productId = JOptionPane.showInputDialog("Enter Product ID:");
         String sourceBranchId = JOptionPane.showInputDialog("Enter Source Branch ID:");
@@ -784,12 +859,6 @@ public class ComputerStoreManagement {
         }
     }
     
-    public void handleCustomerSupport() {
-        String customerId = JOptionPane.showInputDialog("Enter Customer ID:");
-        String productId = JOptionPane.showInputDialog("Enter Product ID:");
-        String description = JOptionPane.showInputDialog("Enter Issue Description:");
-
-    }
 
     // ----- Reports -----
 
@@ -947,6 +1016,8 @@ public class ComputerStoreManagement {
             return false;
         }
     }
+
+    
     
     public boolean generateSatisfactionReport(String branchId, String month, String year) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
