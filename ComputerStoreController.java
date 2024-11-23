@@ -445,10 +445,11 @@ public class ComputerStoreController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String customerId = view.getReadCustomerIDFld().getText();
+                System.out.println("LOL" + customerId);
                 if(model.readCustomerRecord(customerId)){
-                    view.displayReadSuccess();
+                    // view.displayReadSuccess();
                 } else {
-                    view.displayReadFail();
+                    //view.displayReadFail();
                 }
                 view.clearReadForm();
             }
@@ -465,7 +466,7 @@ public class ComputerStoreController {
                 String customerId = view.getUpdateCustomerIDFld().getText();
                 String firstName = view.getUpdateFirstNameFld().getText();
                 String lastName = view.getUpdateLastNameFld().getText();
-                int contactNumber = Integer.parseInt(view.getUpdateContactNumberFld().getText());
+                Long contactNumber = Long.parseLong(view.getUpdateContactNumberFld().getText());
                 String emailAddress = view.getUpdateEmailFld().getText();
                 String shippingAddresss = view.getUpdateShippingAddressFld().getText();
                 if(model.updateCustomerRecord(customerId, lastName, firstName, contactNumber,emailAddress,shippingAddresss)){

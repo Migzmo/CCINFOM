@@ -324,7 +324,7 @@ public class ComputerStoreManagement {
                 if (rs.next()) {
                     String record = "Customer ID: " + rs.getInt("customer_id") + "\n" +
                                     "Full Name: " + rs.getString("customer_firstname") + " " + rs.getString("customer_lastname") + "\n" +
-                                    "Contact Number: " + rs.getInt("contact_number") + "\n" +
+                                    "Contact Number: " + rs.getLong("contact_number") + "\n" +
                                     "Email: " + rs.getString("email_address") + "\n" +
                                     "Shipping Address: " + rs.getString("shipping_address");
                     JOptionPane.showMessageDialog(null, "View Customer Record\n" + record);
@@ -340,14 +340,14 @@ public class ComputerStoreManagement {
         return false;
     }
 
-    public boolean updateCustomerRecord(String customer_id, String customer_lastname, String customer_firstname, int contact_number, String email_address, String shipping_address) {
+    public boolean updateCustomerRecord(String customer_id, String customer_lastname, String customer_firstname, Long contact_number, String email_address, String shipping_address) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             if (isCustomerIdValid(connection, customer_id)) {
                 String query = "UPDATE Customers SET customer_lastname = ?, customer_firstname = ?, contact_number = ?, email_address = ?, shipping_address = ? WHERE customer_id = ?";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setString(1, customer_lastname);
                     preparedStatement.setString(2, customer_firstname);
-                    preparedStatement.setInt(3, contact_number);
+                    preparedStatement.setLong(3, contact_number);
                     preparedStatement.setString(4, email_address);
                     preparedStatement.setString(5, shipping_address);
                     preparedStatement.setInt(6, Integer.parseInt(customer_id));
