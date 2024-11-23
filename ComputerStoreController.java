@@ -200,7 +200,7 @@ public class ComputerStoreController {
                 String hireDate = view.getCreateHireDateFld().getText();
                 
                 if(model.createEmployee(firstName, lastName, branchID, JobId, depID, hireDate) ){
-                    view.displayCreateSuccess();
+                    //view.displayCreateSuccess();
                 } else {
                     view.displayCreateFail();
                 }
@@ -214,9 +214,9 @@ public class ComputerStoreController {
             public void actionPerformed(ActionEvent e) {
                 String employeeId = view.getReadEmployeeIdFld().getText();
                 if(model.readEmployee(employeeId)){
-                    view.displayReadSuccess();
+                    // view.displayReadSuccess();
                 } else {
-                    view.displayReadFail();
+                    // view.displayReadFail();
                 }
                 view.clearReadForm();
             }
@@ -232,7 +232,7 @@ public class ComputerStoreController {
                 String depID = view.getUpdateDepartmentIDFld().getText();
                 String hireDate = view.getUpdateHireDateFld().getText();
                 if(model.updateEmployee(employeeId, firstName, lastName, branchID, JobId, depID, hireDate)){
-                    view.displayUpdateSuccess();
+                    // view.displayUpdateSuccess();
                 } else {
                     view.displayUpdateFail();
                 }
@@ -260,9 +260,9 @@ public class ComputerStoreController {
                     // Call the method to delete the employee
                     String employeeId = view.getDeleteEmployeeIdFld().getText();
                     if(model.deleteEmployee(employeeId)){
-                        view.displayDeleteSuccess();
+                        // view.displayDeleteSuccess();
                     } else {
-                        view.displayDeleteFail();
+                        // view.displayDeleteFail();
                     }
                     
                 }
@@ -427,9 +427,9 @@ public class ComputerStoreController {
                 
                 
                 if(model.createCustomerRecord(lastName, firstName, contactNumber,emailAddress,shippingAddresss) ){
-                    view.displayCreateSuccess();
+                    // view.displayCreateSuccess();
                 } else {
-                    view.displayCreateFail();
+                    // view.displayCreateFail();
                 }
                 view.clearCreateForm();
             }
@@ -470,9 +470,9 @@ public class ComputerStoreController {
                 String emailAddress = view.getUpdateEmailFld().getText();
                 String shippingAddresss = view.getUpdateShippingAddressFld().getText();
                 if(model.updateCustomerRecord(customerId, lastName, firstName, contactNumber,emailAddress,shippingAddresss)){
-                    view.displayUpdateSuccess();
+                    //view.displayUpdateSuccess();
                 } else {
-                    view.displayUpdateFail();
+                    //view.displayUpdateFail();
                 }
                 view.clearUpdateForm();
             }
@@ -499,9 +499,9 @@ public class ComputerStoreController {
                     // Call the method to delete the employee
                     String customerId = view.getDeleteCustomerIDFld().getText();
                     if(model.deleteCustomerRecord(customerId)){
-                        view.displayDeleteSuccess();
+                        //view.displayDeleteSuccess();
                     } else {
-                        view.displayDeleteFail();
+                        //view.displayDeleteFail();
                     }
                     
                 }
@@ -528,9 +528,9 @@ public class ComputerStoreController {
                 int branchContactNumber = Integer.parseInt(view.getCreateBranchContactNumberFld().getText());
                 int branchManager = Integer.parseInt(view.getCreateManagerIDFld().getText());
                 if(model.createBranchRecord(branchName, branchLocation, branchContactNumber, branchManager)){
-                    view.displayCreateSuccess();
+                    //view.displayCreateSuccess();
                 } else {
-                    view.displayCreateFail();
+                    //view.displayCreateFail();
                 }
                 view.clearCreateForm();
             }
@@ -547,9 +547,9 @@ public class ComputerStoreController {
             public void actionPerformed(ActionEvent e) {
                 String branchId = view.getReadBranchIDFld().getText();
                 if(model.readBranchRecord(branchId)){
-                    view.displayReadSuccess();
+                    //view.displayReadSuccess();
                 } else {
-                    view.displayReadFail();
+                    //view.displayReadFail();
                 }
                 view.clearReadForm();
             }
@@ -569,9 +569,9 @@ public class ComputerStoreController {
                 int branchContactNumber = Integer.parseInt(view.getUpdateBranchContactNumberFld().getText());
                 int branchManager = Integer.parseInt(view.getUpdateManagerIDFld().getText());
                 if(model.updateBranchRecord(branchId, branchName, branchLocation, branchContactNumber, branchManager)){
-                    view.displayUpdateSuccess();
+                    //view.displayUpdateSuccess();
                 } else {
-                    view.displayUpdateFail();
+                    //view.displayUpdateFail();
                 }
                 view.clearUpdateForm();
             }
@@ -597,9 +597,9 @@ public class ComputerStoreController {
                     // Call the method to delete the employee
                     String branchId = view.getDeleteBranchIDFld().getText();
                     if(model.deleteBranchRecord(branchId)){
-                        view.displayDeleteSuccess();
+                        //view.displayDeleteSuccess();
                     } else {
-                        view.displayDeleteFail();
+                        //view.displayDeleteFail();
                     }
                     
                 }
