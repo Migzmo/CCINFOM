@@ -616,13 +616,73 @@ public class ComputerStoreManagement {
 
     // ----- Transactions ------
     
-    public void sellProducts() {
-        String productId = JOptionPane.showInputDialog("Enter Product ID:");
-        String branchId = JOptionPane.showInputDialog("Enter Branch ID:");
-        String customerId = JOptionPane.showInputDialog("Enter Customer ID:");
-        String quantity = JOptionPane.showInputDialog("Enter Quantity:");
-        String price = JOptionPane.showInputDialog("Enter Price per Item:");
+    public boolean sellProducts(String productId, String branchId, String customerId, String quantity) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            
+     
+            String getSalesIdQuery = "SELECT MAX(sales_id) FROM sales";
+            int nextSalesId = 1;  // Default value if the table is empty
 
+            try (Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(getSalesIdQuery)) {
+                if (resultSet.next()) {
+                    nextSalesId = resultSet.getInt(1) + 1;  // Increment last employee_id
+                }
+            }
+
+            String query = "SELECT stock, price FROM computerparts WHERE product_id = ? AND branch_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, Integer.parseInt(productId));
+            preparedStatement.setInt(2, Integer.parseInt(branchId));
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int stock = resultSet.getInt("stock");
+                double price = resultSet.getDouble("price");
+                int quantitySold = Integer.parseInt(quantity);
+
+                if (stock >= quantitySold && quantitySold > 0) {
+                    double totalCost = price * quantitySold;
+
+                    String formattedTotalCost = String.format("%.2f", totalCost);
+
+                    // Update stock
+                    String updateStock = "UPDATE computerparts SET stock = stock - ? WHERE product_id = ? AND branch_id = ?";
+                    PreparedStatement updateStmt = connection.prepareStatement(updateStock);
+                    updateStmt.setInt(1, quantitySold);
+                    updateStmt.setInt(2, Integer.parseInt(productId));
+                    updateStmt.setInt(3, Integer.parseInt(branchId));
+                    updateStmt.executeUpdate();
+
+                    // Record the sale
+                    String recordSale = "INSERT INTO sales (sales_id, branch_id, product_id, customer_id, quantity, price_per_item, total_cost, sale_date) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
+                    PreparedStatement saleStmt = connection.prepareStatement(recordSale);
+                    saleStmt.setInt(1, nextSalesId);
+                    saleStmt.setInt(2, Integer.parseInt(branchId));
+                    saleStmt.setInt(3, Integer.parseInt(productId));
+                    saleStmt.setInt(4, Integer.parseInt(customerId));
+                    saleStmt.setInt(5, quantitySold);
+                    saleStmt.setDouble(6, price);
+                    saleStmt.setDouble(7, Double.parseDouble(formattedTotalCost));
+                    saleStmt.executeUpdate();
+
+                    JOptionPane.showMessageDialog(null, "Sale successful!\n Total cost: " + totalCost);
+                    return true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Insufficient stock!");
+                    return false;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Product not found!");
+                return false;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+            return false;
+        }
     }
 
     public void supplyProducts() {

@@ -2683,6 +2683,20 @@ public class userView {
         reportYearField.setText("");
     }
 
+    public void clearSellForm() {
+        productIdField.setText("");
+        branchIdField.setText("");
+        customerIdField.setText("");
+        quantityField.setText("");
+        priceField.setText("");
+    }
+    public void displaySellSuccess() {
+        JOptionPane.showMessageDialog(frame, "Product sold successfully", "Sell Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void displaySellFail() {
+        JOptionPane.showMessageDialog(frame, "Product not sold", "Sell Fail", JOptionPane.ERROR_MESSAGE);
+    }
+    
     public JTextField getCreateproductNameFld() {
         return createproductNameFld;
     }
@@ -2856,14 +2870,6 @@ public class userView {
     public void displaySatisfactionReportFail() {
         JOptionPane.showMessageDialog(frame, "Satisfaction report not generated", "Report Fail", JOptionPane.ERROR_MESSAGE);
     }
-    
 
     
-
-
-
-    
-
-    
-
 }

@@ -91,7 +91,16 @@ public class ComputerStoreController {
             //need to replace this with actualy getting of values and integrating to model and stuff
             @Override
             public void actionPerformed(ActionEvent e){
-                view.displaySellProducts();
+                String productId = view.getProductIdField().getText();
+                String customerId = view.getCustomerIdField().getText();
+                String branchId = view.getBranchIdField().getText();
+                String quantity = view.getQuantityField().getText();
+                if(model.sellProducts(productId, branchId, customerId, quantity)){
+                    view.displaySellSuccess();
+                } else {
+                    view.displaySellFail();
+                }
+                view.clearSellForm();
             }
         });
 
