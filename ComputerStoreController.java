@@ -28,7 +28,7 @@ public class ComputerStoreController {
         this.view.setGenerateReportsBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //view.displayGenerateReports();
+                view.displayReportGeneration();
             }
         });
 
@@ -322,7 +322,7 @@ public class ComputerStoreController {
                 if(model.createComputerPartRecord(branchID, partType, productName, partDescription, partStock, partPrice, partWarranty)){
                     view.displayCreateSuccess();
                 } else {
-                    // view.displayCreateFail();
+                    view.displayCreateFail();
                 }
                 view.clearCreateForm();
             }
@@ -340,7 +340,7 @@ public class ComputerStoreController {
                 if(model.readComputerPartRecord(partId)){
                     view.displayReadSuccess();
                 } else {
-                    // view.displayReadFail();
+                    view.displayReadFail();
                 }
                 view.clearReadForm();
             }
@@ -355,17 +355,17 @@ public class ComputerStoreController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String partId = view.getUpdateProductIDFld().getText();
-                String branchID = view.getUpdateBranchIdFld().getText();
+                String branchID = view.getBranchIdField().getText();
                 String productName = view.getUpdateproductNameFld().getText();
                 String partType = view.getUpdateClassField().getText();
                 int partPrice = Integer.parseInt(view.getUpdatepriceFld().getText());
                 String partDescription= view.getUpdatedescriptionFld().getText();
                 int partStock =  Integer.parseInt(view.getUpdatequantityFld().getText());
                 int partWarranty = Integer.parseInt(view.getUpdateWwarrantyField().getText());
-                if(model.updateComputerPartRecord(partId, branchID, partType, productName, partDescription, partStock, partPrice, partWarranty)){
+                if(model.updateComputerPartRecord(partId, branchID, partDescription, productName, partDescription, partStock, partPrice, partWarranty)){
                     view.displayUpdateSuccess();
                 } else {
-                    // view.displayUpdateFail();
+                    view.displayUpdateFail();
                 }
                 view.clearUpdateForm();
             }
@@ -602,6 +602,30 @@ public class ComputerStoreController {
                     }
                     
                 }
+            }
+        });
+        this.view.setGenerateSalesReportBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displaySalesReportForm();
+            }
+        });
+        this.view.setGenerateSalesReportGnrtBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String month = view.getReportMonthField().getText();
+                String year = view.getReportYearField().getText();
+                String branchId  = view.getReportBranchIdField().getText();
+                
+                  if(model.generateSalesReport(branchId, month,year)){
+                    view.displaySalesReportSuccess();
+                }    else {
+                    view.displaySalesReportFail();
+                }
+                view.clearGenerateForm();
+                 
+                 
+               
             }
         });
 
