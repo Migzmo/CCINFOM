@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -69,6 +68,21 @@ public class ComputerStoreManagement {
             ex.printStackTrace();  // Log the exception details
         }
         return false;  // Product ID does not exist or an error occurred
+    }
+
+    private static boolean isCustomerIdValid(Connection connection, String customerId) {
+        String query = "SELECT COUNT(*) FROM Customers WHERE customer_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, Integer.parseInt(customerId));  // Set the customerId parameter
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return true;  // Customer ID exists
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+        }
+        return false;  // Customer ID does not exist or an error occurred
     }
     
     // Method to check if employeeId exists in the database
@@ -142,7 +156,7 @@ public class ComputerStoreManagement {
     // ---- CRUD -----
 
     public boolean createComputerPartRecord(String branchId, String classification, String productName,  
-                                        String description, int stock, double price, int warrantyDuration) {
+                                            String description, int stock, double price, int warrantyDuration) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             // Query to get the maximum product_id from the ComputerParts table.
             String getProductIdQuery = "SELECT MAX(product_id) FROM ComputerParts";
@@ -182,7 +196,7 @@ public class ComputerStoreManagement {
     }
 
     public boolean readComputerPartRecord(String productId) {
-        String query = "SELECT b.branch_name, cp.classification, cp.product_name, " +
+        String query = "SELECT cp.product_id, cp.branch_id, b.branch_name, cp.classification, cp.product_name, " +
                        "cp.description, cp.stock, cp.price, cp.warranty_duration " +
                        "FROM ComputerParts cp " +
                        "JOIN Branches b ON cp.branch_id = b.branch_id " +
@@ -192,14 +206,16 @@ public class ComputerStoreManagement {
             preparedStatement.setInt(1, Integer.parseInt(productId));
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
-                    String record = "Branch Name: " + rs.getString("branch_name") + "\n" +
+                    String record = "Product ID: " + rs.getInt("product_id") + "\n" +
+                                    "Branch ID: " + rs.getInt("branch_id") + "\n" +
+                                    "Branch Name: " + rs.getString("branch_name") + "\n" +
                                     "Classification: " + rs.getString("classification") + "\n" +
                                     "Product Name: " + rs.getString("product_name") + "\n" +
                                     "Description: " + rs.getString("description") + "\n" +
                                     "Stock: " + rs.getInt("stock") + "\n" +
                                     "Price: " + rs.getDouble("price") + "\n" +
                                     "Warranty Duration: " + rs.getInt("warranty_duration");
-                    JOptionPane.showMessageDialog(null, "Computer Part Record Found!\n" + record);
+                    JOptionPane.showMessageDialog(null, "View Computer Part Record\n" + record);
                     return true;
                 } else {
                     JOptionPane.showMessageDialog(null, "Computer Part Record Not Found!");
@@ -213,7 +229,7 @@ public class ComputerStoreManagement {
     }
 
     public boolean updateComputerPartRecord(String productId, String branchId, String classification, String productName, 
-                                        String description, int stock, double price, int warrantyDuration) {
+                                            String description, int stock, double price, int warrantyDuration) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             if (isProductIdValid(connection, productId)) {
                 String query = "UPDATE ComputerParts SET branch_id = ?, classification = ?, product_name = ?, description = ?, stock = ?, price = ?, warranty_duration = ? WHERE product_id = ?";
@@ -258,6 +274,115 @@ public class ComputerStoreManagement {
         } catch (Exception ex) {
             ex.printStackTrace();  // Log the exception details
             JOptionPane.showMessageDialog(null, "Error: Unable to delete the computer part record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    public boolean createCustomerRecord(String customer_lastname, String customer_firstname, int contact_number, String email_address, String shipping_address) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // Query to get the maximum customer_id from the Customers table.
+            String getCustomerIdQuery = "SELECT MAX(customer_id) FROM Customers";
+            int nextCustomerId = 1;  // Default value if the table is empty
+            
+            // Execute the query to get the maximum customer_id.
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(getCustomerIdQuery)) {
+                if (resultSet.next()) {
+                    nextCustomerId = resultSet.getInt(1) + 1;  // Increment last customer_id
+                }
+            }
+    
+            // Insert the new customer record with the incremented customer_id.
+            String query = "INSERT INTO Customers (customer_id, customer_lastname, customer_firstname, contact_number, email_address, shipping_address) VALUES (?, ?, ?, ?, ?, ?)";
+            
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, nextCustomerId);
+                preparedStatement.setString(2, customer_lastname);
+                preparedStatement.setString(3, customer_firstname);
+                preparedStatement.setInt(4, contact_number);
+                preparedStatement.setString(5, email_address);
+                preparedStatement.setString(6, shipping_address);
+                preparedStatement.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Added Successfully to the Customers Record.");
+            }
+    
+            // Return true if the operation was successful.
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to add the customer record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    public boolean readCustomerRecord(String customerId) {
+        String query = "SELECT * FROM Customers WHERE customer_id = ?";
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, Integer.parseInt(customerId));
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    String record = "Customer ID: " + rs.getInt("customer_id") + "\n" +
+                                    "Full Name: " + rs.getString("customer_firstname") + " " + rs.getString("customer_lastname") + "\n" +
+                                    "Contact Number: " + rs.getInt("contact_number") + "\n" +
+                                    "Email: " + rs.getString("email_address") + "\n" +
+                                    "Shipping Address: " + rs.getString("shipping_address");
+                    JOptionPane.showMessageDialog(null, "View Customer Record\n" + record);
+                    return true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Customer Record Not Found!");
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to read the customer record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+
+    public boolean updateCustomerRecord(String customer_id, String customer_lastname, String customer_firstname, int contact_number, String email_address, String shipping_address) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            if (isCustomerIdValid(connection, customer_id)) {
+                String query = "UPDATE Customers SET customer_lastname = ?, customer_firstname = ?, contact_number = ?, email_address = ?, shipping_address = ? WHERE customer_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, customer_lastname);
+                    preparedStatement.setString(2, customer_firstname);
+                    preparedStatement.setInt(3, contact_number);
+                    preparedStatement.setString(4, email_address);
+                    preparedStatement.setString(5, shipping_address);
+                    preparedStatement.setInt(6, Integer.parseInt(customer_id));
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Customer Record Updated Successfully!");
+                    return true;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Customer Record Not Found.");
+                return false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to update the customer record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    public boolean deleteCustomerRecord(String customer_id) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            if (isCustomerIdValid(connection, customer_id)) {
+                String query = "DELETE FROM Customers WHERE customer_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setInt(1, Integer.parseInt(customer_id));
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Customer Record Deleted Successfully!");
+                    return true;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Customer Record Not Found.");
+                return false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to delete the customer record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
