@@ -941,15 +941,15 @@ public class ComputerStoreManagement {
         
                 // Insert the new transfer record with the incremented emp_transfer_id
                 String query = "INSERT INTO employeetransfers (emp_transfer_id, employee_id, new_branch_id, effective_date, new_job_id, new_department_id, reason) " +
-                            "VALUES (?, ?, ?, ?, NOW(), ?, ?, ?)";
+                            "VALUES (?, ?, ?, NOW(), ?, ?, ?)";
 
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setInt(1, nextEmpTransferId);  // Set the incremented emp_transfer_id
                     preparedStatement.setInt(2, Integer.parseInt(employeeId));
-                    preparedStatement.setInt(4, Integer.parseInt(newBranchId));
-                    preparedStatement.setString(5, newJobId);
-                    preparedStatement.setInt(6, Integer.parseInt(departmentId));
-                    preparedStatement.setString(7, reason);
+                    preparedStatement.setInt(3, Integer.parseInt(newBranchId));
+                    preparedStatement.setString(4, newJobId);
+                    preparedStatement.setInt(5, Integer.parseInt(departmentId));
+                    preparedStatement.setString(6, reason);
                     preparedStatement.executeUpdate();
                 }
         

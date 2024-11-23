@@ -63,20 +63,17 @@ public class ComputerStoreController {
                 String reason = view.getReasonField().getText();
                 StringBuilder error = new StringBuilder();
                 if(model.validTransfer(employeeId, newBranchId, newJobId, departmentId, reason, error)) {
-                    if(model.transferEmployee(employeeId, newBranchId, newJobId, departmentId, reason)) {
+                    if (model.transferEmployee(employeeId, newBranchId, newJobId, departmentId, reason)) {
                         view.displayTransferSucess();
                     } else {
                         view.displayTransferFail(error);
                     }
-                    
                 } else {
-                        view.displayTransferFail(error);
-                        view.displayTransferEmployeeForm();
-                    }
-                    
-                    view.disableAllMainBtns();
+                    view.displayTransferFail(error);
                     view.displayTransferEmployeeForm();
-                
+                }
+                view.disableAllMainBtns();
+                view.displayTransferEmployeeForm();
             }
         });
         
@@ -463,7 +460,6 @@ public class ComputerStoreController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String customerId = view.getReadCustomerIDFld().getText();
-                System.out.println("LOL" + customerId);
                 if(model.readCustomerRecord(customerId)){
                     // view.displayReadSuccess();
                 } else {
