@@ -816,9 +816,9 @@ public class userView {
         transferEmployeePanel.add(employeeIdField);
         transferEmployeePanel.add(new JLabel("New Branch ID:"));
         transferEmployeePanel.add(newBranchIdField);
-        transferEmployeePanel.add(new JLabel("New Job ID:"));
+        transferEmployeePanel.add(new JLabel("New Job ID (Enter 0 if same id will be used):"));
         transferEmployeePanel.add(newJobIdField);
-        transferEmployeePanel.add(new JLabel("New Department ID (if applicable):"));
+        transferEmployeePanel.add(new JLabel("New Dept ID (Enter 0 if same id will be used):"));
         transferEmployeePanel.add(departmentIdField);
         transferEmployeePanel.add(new JLabel("Reason for Transfer:"));
         transferEmployeePanel.add(reasonField);
