@@ -387,7 +387,7 @@ public class ComputerStoreManagement {
         }
     }
 
-    public boolean createBranchRecord(String branch_name, String location, int contact_number, int manager_id) {
+    public boolean createBranchRecord(String branch_name, String location, Long contact_number, int manager_id) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             // Query to get the maximum branch_id from the Branches table.
             String getBranchIdQuery = "SELECT MAX(branch_id) FROM Branches";
@@ -408,7 +408,7 @@ public class ComputerStoreManagement {
                 preparedStatement.setInt(1, nextBranchId);
                 preparedStatement.setString(2, branch_name);
                 preparedStatement.setString(3, location);
-                preparedStatement.setInt(4, contact_number);
+                preparedStatement.setLong(4, contact_number);
                 preparedStatement.setInt(5, manager_id);
                 preparedStatement.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Added Successfully to the Branch Record.");
@@ -433,7 +433,7 @@ public class ComputerStoreManagement {
                     String record = "Branch ID: " + rs.getInt("branch_id") + "\n" +
                                     "Branch Name: " + rs.getString("branch_name") + "\n" +
                                     "Location: " + rs.getString("location") + "\n" +
-                                    "Contact Number: " + rs.getInt("contact_number") + "\n" +
+                                    "Contact Number: " + rs.getLong("contact_number") + "\n" +
                                     "Manager ID: " + rs.getInt("manager_id");
                     JOptionPane.showMessageDialog(null, "View Branch Record\n" + record);
                     return true;
@@ -448,14 +448,14 @@ public class ComputerStoreManagement {
         return false;
     }
 
-    public boolean updateBranchRecord(String branch_id, String branch_name, String location, int contact_number, int manager_id) {
+    public boolean updateBranchRecord(String branch_id, String branch_name, String location, Long contact_number, int manager_id) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             if (isBranchIdValid(connection, branch_id)) {
                 String query = "UPDATE Branches SET branch_name = ?, location = ?, contact_number = ?, manager_id = ? WHERE branch_id = ?";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setString(1, branch_name);
                     preparedStatement.setString(2, location);
-                    preparedStatement.setInt(3, contact_number);
+                    preparedStatement.setLong(3, contact_number);
                     preparedStatement.setInt(4, manager_id);
                     preparedStatement.setInt(5, Integer.parseInt(branch_id));
                     preparedStatement.executeUpdate();

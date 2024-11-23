@@ -525,7 +525,7 @@ public class ComputerStoreController {
             public void actionPerformed(ActionEvent e) {
                 String branchName = view.getCreateBranchNameFld().getText();
                 String branchLocation = view.getCreateBranchLocationFld().getText();
-                int branchContactNumber = Integer.parseInt(view.getCreateBranchContactNumberFld().getText());
+                Long branchContactNumber = Long.parseLong(view.getCreateBranchContactNumberFld().getText());
                 int branchManager = Integer.parseInt(view.getCreateManagerIDFld().getText());
                 if(model.createBranchRecord(branchName, branchLocation, branchContactNumber, branchManager)){
                     //view.displayCreateSuccess();
@@ -566,7 +566,7 @@ public class ComputerStoreController {
                 String branchId = view.getUpdateBranchIdFld().getText();
                 String branchName = view.getUpdateBranchNameFld().getText();
                 String branchLocation = view.getUpdateBranchLocationFld().getText();
-                int branchContactNumber = Integer.parseInt(view.getUpdateBranchContactNumberFld().getText());
+                Long branchContactNumber = Long.parseLong(view.getUpdateBranchContactNumberFld().getText());
                 int branchManager = Integer.parseInt(view.getUpdateManagerIDFld().getText());
                 if(model.updateBranchRecord(branchId, branchName, branchLocation, branchContactNumber, branchManager)){
                     //view.displayUpdateSuccess();
