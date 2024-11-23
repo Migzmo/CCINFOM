@@ -79,7 +79,6 @@ public class userView {
     private JButton applyTrnsfrButton;
     private JButton discardTrnsfrButton;
     private JTextField employeeIdField;
-    private JTextField oldBranchIdField;
     private JTextField newBranchIdField;
     private JTextField newJobIdField;
     private JTextField departmentIdField;
@@ -400,7 +399,6 @@ public class userView {
         JPanel transferEmployeePanel = new JPanel(new GridLayout(7, 2, 10, 10));
 
         employeeIdField = new JTextField();
-        oldBranchIdField = new JTextField();
         newBranchIdField = new JTextField();
         newJobIdField = new JTextField();
         departmentIdField = new JTextField();
@@ -408,8 +406,6 @@ public class userView {
 
         transferEmployeePanel.add(new JLabel("Employee ID:"));
         transferEmployeePanel.add(employeeIdField);
-        transferEmployeePanel.add(new JLabel("Old Branch ID:"));
-        transferEmployeePanel.add(oldBranchIdField);
         transferEmployeePanel.add(new JLabel("New Branch ID:"));
         transferEmployeePanel.add(newBranchIdField);
         transferEmployeePanel.add(new JLabel("New Job ID:"));
@@ -611,10 +607,6 @@ public class userView {
     // Getters and Setters
     public JTextField getEmployeeIdField() {
         return employeeIdField;
-    }
-
-    public JTextField getOldBranchIdField() {
-        return oldBranchIdField;
     }
 
     public JTextField getNewBranchIdField() {
