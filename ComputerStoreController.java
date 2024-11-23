@@ -506,6 +506,105 @@ public class ComputerStoreController {
                 }
             }
         });
+        this.view.setbranchRecordButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayBranchRecordManagement();
+                
+            }
+        });
+        this.view.setCreateBranchButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayCreateBranchForm();
+            }
+        });
+        this.view.setCreateBranchApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String branchName = view.getCreateBranchNameFld().getText();
+                String branchLocation = view.getCreateBranchLocationFld().getText();
+                int branchContactNumber = Integer.parseInt(view.getCreateBranchContactNumberFld().getText());
+                int branchManager = Integer.parseInt(view.getCreateManagerIDFld().getText());
+                if(model.createBranchRecord(branchName, branchLocation, branchContactNumber, branchManager)){
+                    view.displayCreateSuccess();
+                } else {
+                    view.displayCreateFail();
+                }
+                view.clearCreateForm();
+            }
+        });
+
+        this.view.setReadBranchButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayReadBranchForm();
+            }
+        });
+        this.view.setReadBranchApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String branchId = view.getReadBranchIDFld().getText();
+                if(model.readBranchRecord(branchId)){
+                    view.displayReadSuccess();
+                } else {
+                    view.displayReadFail();
+                }
+                view.clearReadForm();
+            }
+        });
+        this.view.setUpdateBranchButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayUpdateBranchForm();
+            }
+        });
+        this.view.setUpdateBranchApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String branchId = view.getUpdateBranchIdFld().getText();
+                String branchName = view.getUpdateBranchNameFld().getText();
+                String branchLocation = view.getUpdateBranchLocationFld().getText();
+                int branchContactNumber = Integer.parseInt(view.getUpdateBranchContactNumberFld().getText());
+                int branchManager = Integer.parseInt(view.getUpdateManagerIDFld().getText());
+                if(model.updateBranchRecord(branchId, branchName, branchLocation, branchContactNumber, branchManager)){
+                    view.displayUpdateSuccess();
+                } else {
+                    view.displayUpdateFail();
+                }
+                view.clearUpdateForm();
+            }
+        });
+        this.view.setDeleteBranchButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayDeleteBranchForm();
+            }
+        });
+        this.view.setDeleteBranchApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int response = JOptionPane.showConfirmDialog(
+                    null,
+                    "Are you sure you want to delete this branch?",
+                    "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+        
+                if (response == JOptionPane.YES_OPTION) {
+                    // Call the method to delete the employee
+                    String branchId = view.getDeleteBranchIDFld().getText();
+                    if(model.deleteBranchRecord(branchId)){
+                        view.displayDeleteSuccess();
+                    } else {
+                        view.displayDeleteFail();
+                    }
+                    
+                }
+            }
+        });
+
 
 
 
