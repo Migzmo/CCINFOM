@@ -5,53 +5,179 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.*;
-
-/**
- * The ComputerStoreManagement class provides methods to manage a collection of computer stores.
- * It includes functionality for creating, reading, updating, and deleting records in the database.
- * This class interacts with a MySQL database to perform various operations related to employees,
- * products, branches, customers, and transactions.
- */
+//the MODEL of the gui basically where the brain works
 public class ComputerStoreManagement {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/db_computer_store";
     private static final String DB_USER = "root"; // USE 'root' as the username
     private static final String DB_PASSWORD = ""; // ENTER YOUR MySQL PASSWORD HERE
 
-    // ----- Getters ----- 
-
-    // Method to get the current department_id of the employee
-    private static String getCurrentJobId(Connection connection, String employeeId) {
-        String query = "SELECT job_id FROM employees WHERE employee_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, Integer.parseInt(employeeId));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("job_id");
-                }
-            }
-        } catch (Exception ex) {
-            // Handle exception if needed
-        }
-        return null; // Return null if no department is found or an error occurs
-    }
     
-    // Method to get the current department_id of the employee
-    private static String getCurrentDepartmentId(Connection connection, String employeeId) {
-        String query = "SELECT department_id FROM employees WHERE employee_id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, Integer.parseInt(employeeId));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("department_id");
+     public boolean createEmployee(String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                // Get the last employee_id from the employees table
+                String getEmployeeIdQuery = "SELECT MAX(employee_id) FROM employees";
+                int nextEmpId = 1;  // Default value if the table is empty
+                
+                try (Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery(getEmployeeIdQuery)) {
+                    if (resultSet.next()) {
+                        nextEmpId = resultSet.getInt(1) + 1;  // Increment last employee_id
+                    }
                 }
-            }
+        
+                // Insert the new transfer record with the incremented emp_transfer_id
+                String query = "INSERT INTO Employees (employee_id, employee_firstname, employee_lastname, branch_id, job_id, department_id, hire_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setInt(1, nextEmpId);
+                    preparedStatement.setString(2, firstName);
+                    preparedStatement.setString(3, lastName);
+                    preparedStatement.setInt(4, Integer.parseInt(branchId));
+                    preparedStatement.setInt(5, Integer.parseInt(jobId));
+                    preparedStatement.setInt(6, Integer.parseInt(departmentId));
+                    preparedStatement.setDate(7, Date.valueOf(hireDate));
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Added Successfully to the Employee Record.");
+                }
+        
+                return true;
+            
         } catch (Exception ex) {
-            // Handle exception if needed
+            return false;
         }
-        return null; // Return null if no department is found or an error occurs
     }
 
-    // ----- Checkers -----
+    public boolean readEmployee(String employeeId) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String query = "SELECT * FROM Employees WHERE employee_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setInt(1, Integer.parseInt(employeeId));
+                    ResultSet rs = preparedStatement.executeQuery();
+                    if (rs.next()) {
+                        String name = rs.getString("employee_firstname") + " " + rs.getString("employee_lastname");
+                        JOptionPane.showMessageDialog(null, "Employee Found: " + name);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Employee Not Found!");
+                    }
+                }
+                return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+    public boolean updateEmployee(String employeeId, String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String query = "UPDATE Employees SET employee_firstname = ?, employee_lastname = ?, branch_id = ?, job_id = ?, department_id = ?, hire_date = ? WHERE employee_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setString(1, firstName);
+                    preparedStatement.setString(2, lastName);
+                    preparedStatement.setInt(3, Integer.parseInt(branchId));
+                    preparedStatement.setInt(4, Integer.parseInt(jobId)); // Assuming job_id is an integer, adjust accordingly
+                    preparedStatement.setInt(5, Integer.parseInt(departmentId)); // Assuming department_id is an integer
+                    preparedStatement.setDate(6, Date.valueOf(hireDate));
+                    preparedStatement.setInt(7, Integer.parseInt(employeeId));
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Employee Updated Successfully!");
+                }
+                return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public static boolean validTransfer (String employeeId, String oldBranchId, String newBranchId, String newJobId, String departmentId, String reason, StringBuilder error) {
+        boolean valid = true;
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)){
+            
+
+            if (!isEmployeeIdValid(connection, employeeId)) {
+                error.append("Employee ID does not exist. Please try again.");
+                valid = false;
+            }
+            if (!isBranchIdValid(connection, oldBranchId)) {
+                error.append("Error: Old Branch ID does not exist. Please try again.");
+                valid = false;
+            }
+            if (!isBranchIdValid(connection, newBranchId)) {
+                error.append("Error: New Branch ID does not exist. Please try again.");
+                valid = false;
+            }
+            if (!isJobIdValid(connection, newJobId)) {
+                error.append("Error: Job ID does not exist. Please try again.");
+                valid = false;
+            }
+            if (!isDepartmentIdValid(connection, departmentId) && (departmentId != null) && !departmentId.equals("0")) {
+                error.append( "Error: Department ID does not exist. Please try again.");
+                valid = false;
+            }
+            if(!valid){
+                return false;
+            }
+        
+        } catch (Exception ex) {
+            error.append("Error: ").append(ex.getMessage());
+            return false;
+
+        }
+                return valid;
+    }
+    public static boolean transferEmployee(String employeeId, String oldBranchId, String newBranchId, String newJobId, String departmentId, String reason) {
+
+        int option; 
+        boolean validInputs; 
+	     
+    
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            
+
+            
+                if ((departmentId == null) || departmentId.equals("0") || departmentId.trim().isEmpty()) {
+                    // If department ID is blank, use the current department_id from the employee record
+                    departmentId = getCurrentDepartmentId(connection, employeeId);
+                }
+
+                // Get the last emp_transfer_id from the employeetransfers table
+                String getLastEmpTransferIdQuery = "SELECT MAX(emp_transfer_id) FROM employeetransfers";
+                int nextEmpTransferId = 1;  // Default value if the table is empty
+                
+                try (Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery(getLastEmpTransferIdQuery)) {
+                    if (resultSet.next()) {
+                        nextEmpTransferId = resultSet.getInt(1) + 1;  // Increment last emp_transfer_id
+                    }
+                }
+        
+                // Insert the new transfer record with the incremented emp_transfer_id
+                String query = "INSERT INTO employeetransfers (emp_transfer_id, employee_id, old_branch_id, new_branch_id, effective_date, new_job_id, new_department_id, reason) " +
+                            "VALUES (?, ?, ?, ?, NOW(), ?, ?, ?)";
+
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setInt(1, nextEmpTransferId);  // Set the incremented emp_transfer_id
+                    preparedStatement.setInt(2, Integer.parseInt(employeeId));
+                    preparedStatement.setInt(3, Integer.parseInt(oldBranchId));
+                    preparedStatement.setInt(4, Integer.parseInt(newBranchId));
+                    preparedStatement.setString(5, newJobId);
+                    preparedStatement.setInt(6, Integer.parseInt(departmentId));
+                    preparedStatement.setString(7, reason);
+                    preparedStatement.executeUpdate();
+                }
+        
+                // Update employee record
+                query = "UPDATE employees SET branch_id = ?, job_id = ?, department_id = ? WHERE employee_id = ?";
+                try (PreparedStatement updateEmployee = connection.prepareStatement(query)) {
+                    updateEmployee.setInt(1, Integer.parseInt(newBranchId));
+                    updateEmployee.setString(2, newJobId);
+                    updateEmployee.setInt(3, Integer.parseInt(departmentId));
+                    updateEmployee.setInt(4, Integer.parseInt(employeeId));
+                    updateEmployee.executeUpdate();
+                }
+        
+                return true;
+            
+        } catch (Exception ex) {
+            return false;
+        }
+    }
     
     // Method to check if employeeId exists in the database
     private static boolean isEmployeeIdValid(Connection connection, String employeeId) {
@@ -119,340 +245,34 @@ public class ComputerStoreManagement {
         // JOptionPane.showMessageDialog(null, "Error: Department ID does not exist. Please try again.");
         return false;
     }
-
-
-    // ---- CRUD -----
-
-    public boolean createComputerPartRecord(String branchId, String classification, String productName,  
-                                        String description, int stock, double price, int warrantyDuration) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            // Query to get the maximum product_id from the ComputerParts table.
-            String getProductIdQuery = "SELECT MAX(product_id) FROM ComputerParts";
-            int nextProductId = 1;  // Default value if the table is empty
-            
-            // Execute the query to get the maximum product_id.
-            try (Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery(getProductIdQuery)) {
-                if (resultSet.next()) {
-                    nextProductId = resultSet.getInt(1) + 1;  // Increment last product_id
-                }
-            }
-
-            // Insert the new computer part record with the incremented product_id.
-            String query = "INSERT INTO ComputerParts (product_id, branch_id, classification, product_name, description, stock, price, warranty_duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, nextProductId);
-                preparedStatement.setInt(2, Integer.parseInt(branchId));
-                preparedStatement.setString(3, classification);
-                preparedStatement.setString(4, productName);
-                preparedStatement.setString(5, description);
-                preparedStatement.setInt(6, stock);
-                preparedStatement.setDouble(7, price);
-                preparedStatement.setInt(8, warrantyDuration);
-                preparedStatement.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Added Successfully to the Computer Parts Record.");
-            }
-
-            // Return true if the operation was successful.
-            return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();  // Log the exception details
-            JOptionPane.showMessageDialog(null, "Error: Unable to add the computer part record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-    }
-
-    public boolean readComputerPartRecord(String productId) {
-        String query = "SELECT b.branch_name, cp.classification, cp.product_name, " +
-                       "cp.description, cp.stock, cp.price, cp.warranty_duration " +
-                       "FROM ComputerParts cp " +
-                       "JOIN Branches b ON cp.branch_id = b.branch_id " +
-                       "WHERE cp.product_id = ?";
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, Integer.parseInt(productId));
-            try (ResultSet rs = preparedStatement.executeQuery()) {
+    
+    // Method to get the current department_id of the employee
+    private static String getCurrentDepartmentId(Connection connection, String employeeId) {
+        String query = "SELECT department_id FROM employees WHERE employee_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, Integer.parseInt(employeeId));
+            try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    String record = "Branch Name: " + rs.getString("branch_name") + "\n" +
-                                    "Classification: " + rs.getString("classification") + "\n" +
-                                    "Product Name: " + rs.getString("product_name") + "\n" +
-                                    "Description: " + rs.getString("description") + "\n" +
-                                    "Stock: " + rs.getInt("stock") + "\n" +
-                                    "Price: " + rs.getDouble("price") + "\n" +
-                                    "Warranty Duration: " + rs.getInt("warranty_duration");
-                    JOptionPane.showMessageDialog(null, "Computer Part Record Found!\n" + record);
-                    return true;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Computer Part Record Not Found!");
+                    return rs.getString("department_id");
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();  // Log the exception details
-            JOptionPane.showMessageDialog(null, "Error: Unable to read the computer part record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            // Handle exception if needed
         }
-        return false;
+        return null; // Return null if no department is found or an error occurs
     }
 
-    public boolean updateComputerPartRecord(String productId, String branchId, String classification, String productName, 
-                                            String description, int stock, double price, int warrantyDuration) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-
-        } catch (Exception ex) {
-            
-        }
-        return false;
-    }
-
-    public boolean deleteComputerPartRecord(String productId) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-
-        } catch (Exception ex) {
-            
-        }
-        return false;
-    }
-
-    // Creates a new employee record in the database. 
-    public boolean createEmployee(String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
-        // Establish a connection to the database using the provided URL, username, and password.
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                // Query to get the maximum employee_id from the employees table
-                String getEmployeeIdQuery = "SELECT MAX(employee_id) FROM employees";
-                int nextEmpId = 1;  // Default value if the table is empty
-                
-                // Execute the query to get the maximum employee_id
-                try (Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery(getEmployeeIdQuery)) {
-                    if (resultSet.next()) {
-                        nextEmpId = resultSet.getInt(1) + 1;  // Increment last employee_id
-                    }
-                }
-        
-                // Insert the new transfer record with the incremented emp_transfer_id
-                String query = "INSERT INTO Employees (employee_id, employee_firstname, employee_lastname, branch_id, job_id, department_id, hire_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setInt(1, nextEmpId);
-                    preparedStatement.setString(2, firstName);
-                    preparedStatement.setString(3, lastName);
-                    preparedStatement.setInt(4, Integer.parseInt(branchId));
-                    preparedStatement.setInt(5, Integer.parseInt(jobId));
-                    preparedStatement.setInt(6, Integer.parseInt(departmentId));
-                    preparedStatement.setDate(7, Date.valueOf(hireDate));
-                    preparedStatement.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "Added Successfully to the Employee Record.");
-                }
-        
-                // Return true if the operation was successful.
-                return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    // updated
-    public boolean readEmployee(String employeeId) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT * FROM Employees WHERE employee_id = ?";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, Integer.parseInt(employeeId));
-                ResultSet rs = preparedStatement.executeQuery();
-                
-                // Check if the result set contains a record
-                if (rs.next()) {
-                    // Employee found, create the report
-                    StringBuilder report = new StringBuilder("View Employee Record\n");
-                    report.append("Employee ID: ").append(rs.getInt("employee_id"))
-                          .append("\nFull Name: ").append(rs.getString("employee_firstname"))
-                          .append(" ").append(rs.getString("employee_lastname"))
-                          .append("\nBranch ID: ").append(rs.getInt("branch_id"))
-                          .append("\nJob ID: ").append(rs.getInt("job_id"))
-                          .append("\nDepartment ID: ").append(rs.getInt("department_id"))
-                          .append("\nHire Date: ").append(rs.getDate("hire_date"))
-                          .append("\n");
-    
-                    // Show the employee details in a message dialog
-                    JOptionPane.showMessageDialog(null, report.toString());
-                    return true;
-                } else {
-                    // No record found
-                    JOptionPane.showMessageDialog(null, "Employee Not Found!");
-                    return false;
-                }
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace(); // Print the stack trace for debugging
-            return false;
-        }
-    }
-    
-    // updated
-    public boolean updateEmployee(String employeeId, String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            if(isEmployeeIdValid(connection, employeeId)){
-                String query = "UPDATE Employees SET employee_firstname = ?, employee_lastname = ?, branch_id = ?, job_id = ?, department_id = ?, hire_date = ? WHERE employee_id = ?";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setString(1, firstName);
-                    preparedStatement.setString(2, lastName);
-                    preparedStatement.setInt(3, Integer.parseInt(branchId));
-                    preparedStatement.setInt(4, Integer.parseInt(jobId)); // Assuming job_id is an integer, adjust accordingly
-                    preparedStatement.setInt(5, Integer.parseInt(departmentId)); // Assuming department_id is an integer
-                    preparedStatement.setDate(6, Date.valueOf(hireDate));
-                    preparedStatement.setInt(7, Integer.parseInt(employeeId));
-                    preparedStatement.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "Employee Updated Successfully!");
-                }
-                return true;
-            } else {
-                JOptionPane.showMessageDialog(null, "Employee Not Found.");
-                return false;
-            }
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    // updated
-    public boolean deleteEmployee(String employeeId) {
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            if(isEmployeeIdValid(connection, employeeId)){
-                String query = "DELETE FROM Employees WHERE employee_id = ?";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setInt(1, Integer.parseInt(employeeId));
-                    preparedStatement.executeUpdate();
-                    JOptionPane.showMessageDialog(null, "Employee Deleted Successfully!");
-                }
-                return true;
-            } else {
-                JOptionPane.showMessageDialog(null, "Employee Not Found.");
-                return false;
-            }
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    // ----- Transactions ------
-    
-    public void sellProducts() {
-        String productId = JOptionPane.showInputDialog("Enter Product ID:");
-        String branchId = JOptionPane.showInputDialog("Enter Branch ID:");
-        String customerId = JOptionPane.showInputDialog("Enter Customer ID:");
-        String quantity = JOptionPane.showInputDialog("Enter Quantity:");
-        String price = JOptionPane.showInputDialog("Enter Price per Item:");
-
-    }
-
-    public void supplyProducts() {
-        String productId = JOptionPane.showInputDialog("Enter Product ID:");
-        String sourceBranchId = JOptionPane.showInputDialog("Enter Source Branch ID:");
-        String destinationBranchId = JOptionPane.showInputDialog("Enter Destination Branch ID:");
-        String quantity = JOptionPane.showInputDialog("Enter Quantity:");
-        String transferPerson = JOptionPane.showInputDialog("Enter Name of Transfer Person:");
-
-    }
-
-    public boolean validTransfer(String employeeId, String newBranchId, String newJobId, String departmentId, String reason, StringBuilder error) {
-        boolean valid = true;
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)){
-            
-
-            if (!isEmployeeIdValid(connection, employeeId)) {
-                error.append("Employee ID does not exist. Please try again.");
-                valid = false;
-            }
-            if (!isBranchIdValid(connection, newBranchId)) {
-                error.append("Error: New Branch ID does not exist. Please try again.");
-                valid = false;
-            }
-            if (!isJobIdValid(connection, newJobId) && (newJobId != null) && !newJobId.equals("0")) {
-                error.append("Error: Job ID does not exist. Please try again.");
-                valid = false;
-            }
-            if (!isDepartmentIdValid(connection, departmentId) && (departmentId != null) && !departmentId.equals("0")) {
-                error.append( "Error: Department ID does not exist. Please try again.");
-                valid = false;
-            }
-            if(!valid){
-                return false;
-            }
-        
-        } catch (Exception ex) {
-            error.append("Error: ").append(ex.getMessage());
-            return false;
-
-        }
-        
-        return valid;
-    }
-    
-    public boolean transferEmployee(String employeeId, String newBranchId, String newJobId, String departmentId, String reason) {
-    
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            
-                if ((departmentId == null) || departmentId.equals("0") || departmentId.trim().isEmpty()) {
-                    // If department ID is blank, use the current department_id from the employee record
-                    departmentId = getCurrentDepartmentId(connection, employeeId);
-                }
-
-                if ((newJobId == null) || newJobId.equals("0") || newJobId.trim().isEmpty()) {
-                    // If job ID is blank, use the current job_id from the employee record
-                    newJobId = getCurrentJobId(connection, employeeId);
-                }
-
-                // Get the last emp_transfer_id from the employeetransfers table
-                String getLastEmpTransferIdQuery = "SELECT MAX(emp_transfer_id) FROM employeetransfers";
-                int nextEmpTransferId = 1;  // Default value if the table is empty
-                
-                try (Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery(getLastEmpTransferIdQuery)) {
-                    if (resultSet.next()) {
-                        nextEmpTransferId = resultSet.getInt(1) + 1;  // Increment last emp_transfer_id
-                    }
-                }
-        
-                // Insert the new transfer record with the incremented emp_transfer_id
-                String query = "INSERT INTO employeetransfers (emp_transfer_id, employee_id, new_branch_id, effective_date, new_job_id, new_department_id, reason) " +
-                            "VALUES (?, ?, ?, ?, NOW(), ?, ?, ?)";
-
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setInt(1, nextEmpTransferId);  // Set the incremented emp_transfer_id
-                    preparedStatement.setInt(2, Integer.parseInt(employeeId));
-                    preparedStatement.setInt(4, Integer.parseInt(newBranchId));
-                    preparedStatement.setString(5, newJobId);
-                    preparedStatement.setInt(6, Integer.parseInt(departmentId));
-                    preparedStatement.setString(7, reason);
-                    preparedStatement.executeUpdate();
-                }
-        
-                // Update employee record
-                query = "UPDATE employees SET branch_id = ?, job_id = ?, department_id = ? WHERE employee_id = ?";
-                try (PreparedStatement updateEmployee = connection.prepareStatement(query)) {
-                    updateEmployee.setInt(1, Integer.parseInt(newBranchId));
-                    updateEmployee.setString(2, newJobId);
-                    updateEmployee.setInt(3, Integer.parseInt(departmentId));
-                    updateEmployee.setInt(4, Integer.parseInt(employeeId));
-                    updateEmployee.executeUpdate();
-                }
-        
-                return true;
-            
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-    
-    public void handleCustomerSupport() {
+    public  void handleCustomerSupport() {
         String customerId = JOptionPane.showInputDialog("Enter Customer ID:");
         String productId = JOptionPane.showInputDialog("Enter Product ID:");
         String description = JOptionPane.showInputDialog("Enter Issue Description:");
 
     }
 
-    // ----- Reports -----
+    public void generateReports() {
+        String reportType = JOptionPane.showInputDialog("Enter Report Type (1 for Sales, 2 for Stock, 3 for Customer Ticket, 4 for Customer Satisfaction):");
 
-    // updated
+    }
     public boolean generateStockReport(String branchId, String month, String year) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT cp.product_id, cp.product_name, cp.classification, cp.stock - IFNULL(SUM(s.quantity), 0) AS remaining_stock " +
@@ -466,20 +286,18 @@ public class ComputerStoreManagement {
                 preparedStatement.setInt(2, Integer.parseInt(month));
                 preparedStatement.setInt(3, Integer.parseInt(branchId));
                 ResultSet rs = preparedStatement.executeQuery();
-                StringBuilder report = new StringBuilder("Branch Stock Report\n");
+                StringBuilder report = new StringBuilder("Branch Stock Report:\n");
                 while (rs.next()) {
                     report.append("Product ID: ").append(rs.getString("product_id"))
-                          .append("\nProduct Name: ").append(rs.getString("product_name"))
-                          .append("\nClassification: ").append(rs.getString("classification"))
+                          .append("\nProduct Name: ").append(rs.getInt("product_name"))
+                          .append("\nClassification: ").append(rs.getInt("classification"))
                           .append("\nRemaining Number of Stocks: ").append(rs.getInt("remaining_stock"))
                           .append("\n");
                 }
-                // Show the report in a message dialog
                 JOptionPane.showMessageDialog(null, report.toString());   
             }
             return true;
         } catch (Exception ex) {
-            ex.printStackTrace(); // For debugging purposes
             return false;
         }
     }
