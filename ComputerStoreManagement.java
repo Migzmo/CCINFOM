@@ -433,7 +433,7 @@ public class ComputerStoreManagement {
                     String record = "Branch ID: " + rs.getInt("branch_id") + "\n" +
                                     "Branch Name: " + rs.getString("branch_name") + "\n" +
                                     "Location: " + rs.getString("location") + "\n" +
-                                    "Contact Number: " + rs.getString("contact_number") + "\n" +
+                                    "Contact Number: " + rs.getInt("contact_number") + "\n" +
                                     "Manager ID: " + rs.getInt("manager_id");
                     JOptionPane.showMessageDialog(null, "View Branch Record\n" + record);
                     return true;
