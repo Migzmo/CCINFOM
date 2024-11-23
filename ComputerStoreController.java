@@ -204,6 +204,7 @@ public class ComputerStoreController {
                 } else {
                     view.displayCreateFail();
                 }
+                view.clearCreateForm();
 
             }
         });
@@ -217,6 +218,7 @@ public class ComputerStoreController {
                 } else {
                     view.displayReadFail();
                 }
+                view.clearReadForm();
             }
         });
         this.view.setUpdateEmployeeApplyButtonListener(new ActionListener() {
@@ -234,6 +236,7 @@ public class ComputerStoreController {
                 } else {
                     view.displayUpdateFail();
                 }
+                view.clearUpdateForm();
             }
         });
         this.view.setDeleteEmployeeButtonListener(new ActionListener() {
@@ -268,31 +271,136 @@ public class ComputerStoreController {
         this.view.setDeleteEmployeeDiscardButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.clearDeleteEmployeeForm();
+                view.clearDeleteForm();
              
             }
         });
         this.view.setCreateEmployeeDiscardButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.clearCreateEmployeeForm();
+                view.clearCreateForm();
                 
             }
         });
         this.view.setReadEmployeeDiscardButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.clearCreateEmployeeForm();
+                view.clearReadForm();
                
             }
         });
         this.view.setUpdateEmployeeDiscardButtonListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.clearUpdateEmployeeForm();
+                view.clearUpdateForm();
                
             }
         });
+        this.view.setcompterPartsButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayComputerPartsManagement();
+            }
+        });
+
+        this.view.setCreateComputerPartsButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayCreateComputerForm();
+            }
+        });
+        this.view.setCreatePartsApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String branchID = view.getCreatebranchIdFld().getText();
+                String productName = view.getCreateproductNameFld().getText();
+                String partType = view.getCreateClassField().getText();
+                int partPrice = Integer.parseInt(view.getCreatepriceFld().getText());
+                String partDescription= view.getCreatedescriptionFld().getText();
+                int partStock =  Integer.parseInt(view.getCreatequantityFld().getText());
+                int partWarranty = Integer.parseInt(view.getCreateWwarrantyField().getText());
+                if(model.createComputerPartRecord(branchID, partDescription, productName, partDescription, partStock, partPrice, partWarranty)){
+                    view.displayCreateSuccess();
+                } else {
+                    view.displayCreateFail();
+                }
+                view.clearCreateForm();
+            }
+        });
+        this.view.setReadComputerPartsButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayReadComputerPartsForm();
+            }
+        });
+        this.view.setReadComputerPartsApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String partId = view.getReadProductIDFld().getText();
+                if(model.readComputerPartRecord(partId)){
+                    view.displayReadSuccess();
+                } else {
+                    view.displayReadFail();
+                }
+                view.clearReadForm();
+            }
+        });
+        this.view.setUpdateComputerPartsButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayUpdateComputerPartsForm();
+            }
+        });
+        this.view.setUpdateComputerPartsApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String partId = view.getUpdateProductIDFld().getText();
+                String branchID = view.getBranchIdField().getText();
+                String productName = view.getUpdateproductNameFld().getText();
+                String partType = view.getUpdateClassField().getText();
+                int partPrice = Integer.parseInt(view.getUpdatepriceFld().getText());
+                String partDescription= view.getUpdatedescriptionFld().getText();
+                int partStock =  Integer.parseInt(view.getUpdatequantityFld().getText());
+                int partWarranty = Integer.parseInt(view.getUpdateWwarrantyField().getText());
+                if(model.updateComputerPartRecord(partId, branchID, partDescription, productName, partDescription, partStock, partPrice, partWarranty)){
+                    view.displayUpdateSuccess();
+                } else {
+                    view.displayUpdateFail();
+                }
+                view.clearUpdateForm();
+            }
+        });
+       
+        this.view.setDeleteComputerPartsButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayDeleteComputerPartsForm();
+            }
+        });
+        this.view.setDeleteComputerPartsApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int response = JOptionPane.showConfirmDialog(
+                    null,
+                    "Are you sure you want to delete this computer part?",
+                    "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+        
+                if (response == JOptionPane.YES_OPTION) {
+                    // Call the method to delete the employee
+                    String partId = view.getDeleteProductIDFld().getText();
+                    if(model.deleteComputerPartRecord(partId)){
+                        view.displayDeleteSuccess();
+                    } else {
+                        view.displayDeleteFail();
+                    }
+                    
+                }
+            }
+        });
+
 
     }
 }
