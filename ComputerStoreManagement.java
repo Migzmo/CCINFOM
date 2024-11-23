@@ -4,7 +4,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * The ComputerStoreManagement class provides methods to manage a collection of computer stores.
@@ -498,7 +501,7 @@ public class ComputerStoreManagement {
 
     // ----- Reports -----
 
-    // updated
+    // 2nd update
     public boolean generateStockReport(String branchId, String month, String year) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT cp.product_id, cp.product_name, cp.classification, cp.stock - IFNULL(SUM(s.quantity), 0) AS remaining_stock " +
@@ -512,21 +515,88 @@ public class ComputerStoreManagement {
                 preparedStatement.setInt(2, Integer.parseInt(month));
                 preparedStatement.setInt(3, Integer.parseInt(branchId));
                 ResultSet rs = preparedStatement.executeQuery();
-                StringBuilder report = new StringBuilder("Branch Stock Report\n");
+    
+                // Column names for the JTable
+                String[] columnNames = {"Product ID", "Product Name", "Classification", "Remaining Stock"};
+                
+                // DefaultTableModel to hold data for JTable
+                DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+    
+                // Process each row in the result set and add to table model
                 while (rs.next()) {
-                    report.append("Product ID: ").append(rs.getString("product_id"))
-                          .append("\nProduct Name: ").append(rs.getString("product_name"))
-                          .append("\nClassification: ").append(rs.getString("classification"))
-                          .append("\nRemaining Number of Stocks: ").append(rs.getInt("remaining_stock"))
-                          .append("\n");
+                    String productId = rs.getString("product_id");
+                    String productName = rs.getString("product_name");
+                    String classification = rs.getString("classification");
+                    int remainingStock = rs.getInt("remaining_stock");
+    
+                    // Add the row to the table model
+                    tableModel.addRow(new Object[]{productId, productName, classification, remainingStock});
                 }
-                // Show the report in a message dialog
-                JOptionPane.showMessageDialog(null, report.toString());   
+    
+                // Create a JTable with the table model
+                JTable stockTable = new JTable(tableModel);
+    
+                // Wrap JTable in a JScrollPane for scrollability
+                JScrollPane scrollPane = new JScrollPane(stockTable);
+    
+                // Show the table in a message dialog
+                JOptionPane.showMessageDialog(null, scrollPane, "Branch Stock Report", JOptionPane.INFORMATION_MESSAGE);
             }
             return true;
         } catch (Exception ex) {
             ex.printStackTrace(); // For debugging purposes
             return false;
         }
-    }
+    }    
+
+    public boolean generateTicketReport(String branchId, String month, String year) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String query = "SELECT ST.ticket_opened_date AS ticket_date, COUNT(ST.ticket_id) AS total_tickets " +
+                        "FROM db_computer_store.SupportTickets ST " +
+                        "JOIN db_computer_store.Sales S ON ST.sales_id = S.sales_id " +
+                        "WHERE S.branch_id = ? AND YEAR(ST.ticket_opened_date) = ? AND MONTH(ST.ticket_opened_date) = ? " +
+                        "GROUP BY ST.ticket_opened_date " +
+                        "ORDER BY ST.ticket_opened_date";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, Integer.parseInt(branchId));
+                preparedStatement.setInt(2, Integer.parseInt(year));
+                preparedStatement.setInt(3, Integer.parseInt(month));
+                ResultSet rs = preparedStatement.executeQuery();
+        
+                // Column names for the JTable
+                String[] columnNames = {"Ticket Date", "Total Tickets"};
+                    
+                // DefaultTableModel to hold data for JTable
+                DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        
+                // SimpleDateFormat to format the ticket_date in a readable format
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  // Adjust format as needed
+        
+                // Process each row in the result set and add to table model
+                while (rs.next()) {
+                    Date ticketDate = rs.getDate("ticket_date"); // Get the ticket date from the database
+                    int totalTickets = rs.getInt("total_tickets");
+        
+                    // Format the date as a String
+                    String formattedDate = (ticketDate != null) ? dateFormat.format(ticketDate) : "";
+        
+                    // Add the row to the table model
+                    tableModel.addRow(new Object[]{formattedDate, totalTickets});
+                }
+        
+                // Create a JTable with the table model
+                JTable ticketTable = new JTable(tableModel);
+        
+                // Wrap JTable in a JScrollPane for scrollability
+                JScrollPane scrollPane = new JScrollPane(ticketTable);
+        
+                // Show the table in a message dialog
+                JOptionPane.showMessageDialog(null, scrollPane, "Customer Support Ticket Report", JOptionPane.INFORMATION_MESSAGE);
+            }
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace(); // For debugging purposes
+            return false;
+        }
+    }   
 }
