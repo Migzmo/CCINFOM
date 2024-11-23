@@ -161,27 +161,46 @@ public class ComputerStoreManagement {
         }
     }
 
+    // updated
     public boolean readEmployee(String employeeId) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                String query = "SELECT * FROM Employees WHERE employee_id = ?";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setInt(1, Integer.parseInt(employeeId));
-                    ResultSet rs = preparedStatement.executeQuery();
-                    if (rs.next()) {
-                        String name = rs.getString("employee_firstname") + " " + rs.getString("employee_lastname");
-                        JOptionPane.showMessageDialog(null, "Employee Found: " + name);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Employee Not Found!");
-                    }
+            String query = "SELECT * FROM Employees WHERE employee_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, Integer.parseInt(employeeId));
+                ResultSet rs = preparedStatement.executeQuery();
+                
+                // Check if the result set contains a record
+                if (rs.next()) {
+                    // Employee found, create the report
+                    StringBuilder report = new StringBuilder("View Employee Record\n");
+                    report.append("Employee ID: ").append(rs.getInt("employee_id"))
+                          .append("\nFull Name: ").append(rs.getString("employee_firstname"))
+                          .append(" ").append(rs.getString("employee_lastname"))
+                          .append("\nBranch ID: ").append(rs.getInt("branch_id"))
+                          .append("\nJob ID: ").append(rs.getInt("job_id"))
+                          .append("\nDepartment ID: ").append(rs.getInt("department_id"))
+                          .append("\nHire Date: ").append(rs.getDate("hire_date"))
+                          .append("\n");
+    
+                    // Show the employee details in a message dialog
+                    JOptionPane.showMessageDialog(null, report.toString());
+                    return true;
+                } else {
+                    // No record found
+                    JOptionPane.showMessageDialog(null, "Employee Not Found!");
+                    return false;
                 }
-                return true;
+            }
         } catch (Exception ex) {
+            ex.printStackTrace(); // Print the stack trace for debugging
             return false;
         }
     }
-
+    
+    // updated
     public boolean updateEmployee(String employeeId, String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            if(isEmployeeIdValid(connection, employeeId)){
                 String query = "UPDATE Employees SET employee_firstname = ?, employee_lastname = ?, branch_id = ?, job_id = ?, department_id = ?, hire_date = ? WHERE employee_id = ?";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                     preparedStatement.setString(1, firstName);
@@ -195,20 +214,30 @@ public class ComputerStoreManagement {
                     JOptionPane.showMessageDialog(null, "Employee Updated Successfully!");
                 }
                 return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Employee Not Found.");
+                return false;
+            }
         } catch (Exception ex) {
             return false;
         }
     }
 
+    // updated
     public boolean deleteEmployee(String employeeId) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "DELETE FROM Employees WHERE employee_id = ?";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                preparedStatement.setInt(1, Integer.parseInt(employeeId));
-                preparedStatement.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Employee Deleted Successfully!");
+            if(isEmployeeIdValid(connection, employeeId)){
+                String query = "DELETE FROM Employees WHERE employee_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setInt(1, Integer.parseInt(employeeId));
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Employee Deleted Successfully!");
+                }
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Employee Not Found.");
+                return false;
             }
-            return true;
         } catch (Exception ex) {
             return false;
         }
@@ -333,6 +362,7 @@ public class ComputerStoreManagement {
 
     // ----- Reports -----
 
+    // updated
     public boolean generateStockReport(String branchId, String month, String year) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT cp.product_id, cp.product_name, cp.classification, cp.stock - IFNULL(SUM(s.quantity), 0) AS remaining_stock " +
@@ -346,18 +376,20 @@ public class ComputerStoreManagement {
                 preparedStatement.setInt(2, Integer.parseInt(month));
                 preparedStatement.setInt(3, Integer.parseInt(branchId));
                 ResultSet rs = preparedStatement.executeQuery();
-                StringBuilder report = new StringBuilder("Branch Stock Report:\n");
+                StringBuilder report = new StringBuilder("Branch Stock Report\n");
                 while (rs.next()) {
                     report.append("Product ID: ").append(rs.getString("product_id"))
-                          .append("\nProduct Name: ").append(rs.getInt("product_name"))
-                          .append("\nClassification: ").append(rs.getInt("classification"))
+                          .append("\nProduct Name: ").append(rs.getString("product_name"))
+                          .append("\nClassification: ").append(rs.getString("classification"))
                           .append("\nRemaining Number of Stocks: ").append(rs.getInt("remaining_stock"))
                           .append("\n");
                 }
+                // Show the report in a message dialog
                 JOptionPane.showMessageDialog(null, report.toString());   
             }
             return true;
         } catch (Exception ex) {
+            ex.printStackTrace(); // For debugging purposes
             return false;
         }
     }
