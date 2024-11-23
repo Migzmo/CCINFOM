@@ -52,6 +52,21 @@ public class ComputerStoreManagement {
     }
 
     // ----- Checkers -----
+
+    private static boolean isProductIdValid(Connection connection, String productId) {
+        String query = "SELECT COUNT(*) FROM ComputerParts WHERE product_id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, Integer.parseInt(productId));  // Set the productId parameter
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return true;  // Product ID exists
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+        }
+        return false;  // Product ID does not exist or an error occurred
+    }
     
     // Method to check if employeeId exists in the database
     private static boolean isEmployeeIdValid(Connection connection, String employeeId) {
@@ -195,22 +210,53 @@ public class ComputerStoreManagement {
     }
 
     public boolean updateComputerPartRecord(String productId, String branchId, String classification, String productName, 
-                                            String description, int stock, double price, int warrantyDuration) {
+                                        String description, int stock, double price, int warrantyDuration) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-
+            if (isProductIdValid(connection, productId)) {
+                String query = "UPDATE ComputerParts SET branch_id = ?, classification = ?, product_name = ?, description = ?, stock = ?, price = ?, warranty_duration = ? WHERE product_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setInt(1, Integer.parseInt(branchId));
+                    preparedStatement.setString(2, classification);
+                    preparedStatement.setString(3, productName);
+                    preparedStatement.setString(4, description);
+                    preparedStatement.setInt(5, stock);
+                    preparedStatement.setDouble(6, price);
+                    preparedStatement.setInt(7, warrantyDuration);
+                    preparedStatement.setInt(8, Integer.parseInt(productId));
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Computer Part Record Updated Successfully!");
+                    return true;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Computer Part Record Not Found.");
+                return false;
+            }
         } catch (Exception ex) {
-            
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to update the computer part record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        return false;
     }
 
     public boolean deleteComputerPartRecord(String productId) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-
+            if (isProductIdValid(connection, productId)) {
+                String query = "DELETE FROM ComputerParts WHERE product_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                    preparedStatement.setInt(1, Integer.parseInt(productId));
+                    preparedStatement.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Computer Part Record Deleted Successfully!");
+                    return true;
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Computer Part Record Not Found.");
+                return false;
+            }
         } catch (Exception ex) {
-            
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to delete the computer part record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        return false;
     }
 
     // Creates a new employee record in the database. 
