@@ -319,7 +319,7 @@ public class ComputerStoreController {
                 String partDescription= view.getCreatedescriptionFld().getText();
                 int partStock =  Integer.parseInt(view.getCreatequantityFld().getText());
                 int partWarranty = Integer.parseInt(view.getCreateWwarrantyField().getText());
-                if(model.createComputerPartRecord(branchID, partDescription, productName, partDescription, partStock, partPrice, partWarranty)){
+                if(model.createComputerPartRecord(branchID, partType, productName, partDescription, partStock, partPrice, partWarranty)){
                     view.displayCreateSuccess();
                 } else {
                     view.displayCreateFail();
