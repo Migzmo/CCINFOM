@@ -13,7 +13,7 @@ public class ComputerStoreController {
         this.view.setRecordsManagementBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //view.displayRecordsManagement();
+                view.displayRecordsManagement();
             }
         });
 
@@ -152,6 +152,32 @@ public class ComputerStoreController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 view.displaySellProducts();
+            }
+        });
+        this.view.setCreateButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                view.displayCreateRecordForm();
+            }
+        });
+
+        // This is for creating a new employee
+        this.view.setCreateApplyButtonListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String firstName = view.getCreateFirstNameFld().getText();
+                String lastName = view.getCreateLastNameFld().getText();
+                String branchID = view.getCreatebranchIdFld().getText();
+                String JobId = view.getCreateJobIDfld().getText();
+                String depID = view.getCreateDepartmentIDFld().getText();
+                String hireDate = view.getCreateHireDateFld().getText();
+                
+                if(model.createEmployee(firstName, lastName, branchID, JobId, depID, hireDate) ){
+                    view.displayCreateSuccess();
+                } else {
+                    view.displayCreateFail();
+                }
+
             }
         });
     }
