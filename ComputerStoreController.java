@@ -322,7 +322,7 @@ public class ComputerStoreController {
                 if(model.createComputerPartRecord(branchID, partType, productName, partDescription, partStock, partPrice, partWarranty)){
                     view.displayCreateSuccess();
                 } else {
-                    view.displayCreateFail();
+                    // view.displayCreateFail();
                 }
                 view.clearCreateForm();
             }

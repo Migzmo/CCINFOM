@@ -1308,7 +1308,7 @@ public class userView {
 
     gbc.gridx = 1;
     gbc.weightx = 1; // Allow text fields to expand horizontally
-    newRecordPanel.add(readEmployeeIdFld, gbc);
+    newRecordPanel.add(readProductIDFld, gbc);
 
 
     // Add buttons (Create and Discard)
