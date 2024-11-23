@@ -831,4 +831,111 @@ public class ComputerStoreManagement {
             return false;
         }
     }   
+
+    public boolean generateSalesReport(String branchId, String month, String year) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String query = "SELECT DATE(s.sale_date) AS sale_date, SUM(s.total_cost) AS total_sales, AVG(s.total_cost) AS average_sales " +
+                           "FROM db_computer_store.Sales cp " +
+                           "LEFT JOIN db_computer_store.Sales s ON cp.product_id = s.product_id AND cp.branch_id = s.branch_id AND YEAR(s.sale_date) <= ? AND MONTH(s.sale_date) <= ? " +
+                           "WHERE cp.branch_id = ? AND MONTH(s.sale_date) = ? AND YEAR(s.sale_date) = ? " +
+                           "GROUP BY DATE(s.sale_date) " +
+                           "ORDER BY sale_date";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                // Set parameters for the query
+                preparedStatement.setInt(1, Integer.parseInt(year)); // YEAR(s.sale_date) <= ?
+                preparedStatement.setInt(2, Integer.parseInt(month)); // MONTH(s.sale_date) <= ?
+                preparedStatement.setInt(3, Integer.parseInt(branchId)); // branch_id = ?
+                preparedStatement.setInt(4, Integer.parseInt(month)); // MONTH(sale_date) = ?
+                preparedStatement.setInt(5, Integer.parseInt(year)); // YEAR(sale_date) = ?
+    
+                ResultSet rs = preparedStatement.executeQuery();
+    
+                // Column names for the JTable
+                String[] columnNames = {"sale_date", "total_sales", "average_sales"};
+    
+                // DefaultTableModel to hold data for JTable
+                DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+    
+                // SimpleDateFormat to format the ticket_date in a readable format
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  // Adjust format as needed
+    
+                // Process each row in the result set and add to table model
+                while (rs.next()) {
+                    Date sale_date = rs.getDate("sale_date"); // Get the ticket date from the database
+                    float total_sales = rs.getFloat("total_sales");
+                    float average_sales = rs.getFloat("average_sales");
+    
+                    // Format the date as a String
+                    String formattedDate = (sale_date != null) ? dateFormat.format(sale_date) : "";
+    
+                    // Add the row to the table model
+                    tableModel.addRow(new Object[]{formattedDate, total_sales, average_sales});
+                }
+    
+                // Create a JTable with the table model
+                JTable salesTable = new JTable(tableModel);
+    
+                // Wrap JTable in a JScrollPane for scrollability
+                JScrollPane scrollPane = new JScrollPane(salesTable);
+    
+                // Show the table in a message dialog
+                JOptionPane.showMessageDialog(null, scrollPane, "Sales Report", JOptionPane.INFORMATION_MESSAGE);
+            }
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace(); // For debugging purposes
+            return false;
+        }
+    }
+    
+    public boolean generateSatisfactionReport(String branchId, String month, String year) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String query = "SELECT sf.feedback_date, AVG(sf.rating) AS average_rating " +
+                        "FROM db_computer_store.CustomerFeedback sf " +
+                        "JOIN db_computer_store.Sales s ON sf.sales_id = s.sales_id " +
+                        "WHERE s.branch_id = ? AND MONTH(sf.feedback_date) = ? AND YEAR(sf.feedback_date) = ? " +
+                        "GROUP BY sf.feedback_date " + 
+                        "ORDER BY sf.feedback_date";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, Integer.parseInt(branchId));
+                preparedStatement.setInt(2, Integer.parseInt(month));
+                preparedStatement.setInt(3, Integer.parseInt(year));
+                ResultSet rs = preparedStatement.executeQuery();
+        
+                // Column names for the JTable
+                String[] columnNames = {"feedback_date", "average_rating"};
+                    
+                // DefaultTableModel to hold data for JTable
+                DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        
+                // SimpleDateFormat to format the ticket_date in a readable format
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");  // Adjust format as needed
+        
+                // Process each row in the result set and add to table model
+                while (rs.next()) {
+                    Date feedback_date = rs.getDate("feedback_date"); // Get the ticket date from the database
+                    float average_rating = rs.getFloat("average_rating");
+        
+                    // Format the date as a String
+                    String formattedDate = (feedback_date != null) ? dateFormat.format(feedback_date) : "";
+        
+                    // Add the row to the table model
+                    tableModel.addRow(new Object[]{formattedDate, average_rating});
+                }
+        
+                // Create a JTable with the table model
+                JTable satisfactionTable = new JTable(tableModel);
+        
+                // Wrap JTable in a JScrollPane for scrollability
+                JScrollPane scrollPane = new JScrollPane(satisfactionTable);
+        
+                // Show the table in a message dialog
+                JOptionPane.showMessageDialog(null, scrollPane, "Customer Satisfaction Report", JOptionPane.INFORMATION_MESSAGE);
+            }
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace(); // For debugging purposes
+            return false;
+        }
+    }
 }
