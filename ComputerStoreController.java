@@ -400,6 +400,113 @@ public class ComputerStoreController {
                 }
             }
         });
+        
+        this.view.setcusomterRecordButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayCustomerRecordManagement();
+                
+            }
+        });
+
+        this.view.setCreateCustomerButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayCreateCustomerForm();
+            }
+        });
+
+        this.view.setCreateCustomerApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String firstName = view.getCreateFirstNameFld().getText();
+                String lastName = view.getCreateLastNameFld().getText();
+                int contactNumber = Integer.parseInt(view.getCreateContactNumberFld().getText());
+                String emailAddress = view.getCreateEmailFld().getText();
+                String shippingAddresss = view.getCreateShippingAddressFld().getText();
+                
+                
+                if(model.createCustomerRecord(lastName, firstName, contactNumber,emailAddress,shippingAddresss) ){
+                    view.displayCreateSuccess();
+                } else {
+                    view.displayCreateFail();
+                }
+                view.clearCreateForm();
+            }
+        });
+
+        this.view.setReadCustomerButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayReadCustomerForm();
+            }
+        });
+        this.view.setReadCustomerApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String customerId = view.getReadCustomerIDFld().getText();
+                if(model.readCustomerRecord(customerId)){
+                    view.displayReadSuccess();
+                } else {
+                    view.displayReadFail();
+                }
+                view.clearReadForm();
+            }
+        });
+        this.view.setUpdateCustomerButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayUpdateCustomerForm();
+            }
+        });
+        this.view.setUpdateCustomerApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String customerId = view.getUpdateCustomerIDFld().getText();
+                String firstName = view.getUpdateFirstNameFld().getText();
+                String lastName = view.getUpdateLastNameFld().getText();
+                int contactNumber = Integer.parseInt(view.getUpdateContactNumberFld().getText());
+                String emailAddress = view.getUpdateEmailFld().getText();
+                String shippingAddresss = view.getUpdateShippingAddressFld().getText();
+                if(model.updateCustomerRecord(customerId, lastName, firstName, contactNumber,emailAddress,shippingAddresss)){
+                    view.displayUpdateSuccess();
+                } else {
+                    view.displayUpdateFail();
+                }
+                view.clearUpdateForm();
+            }
+        });
+
+        this.view.setDeleteCustomerButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayDeleteCustomerForm();
+            }
+        });
+        this.view.setDeleteCustomerApplyButtonListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int response = JOptionPane.showConfirmDialog(
+                    null,
+                    "Are you sure you want to delete this customer?",
+                    "Confirm Deletion",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+                );
+        
+                if (response == JOptionPane.YES_OPTION) {
+                    // Call the method to delete the employee
+                    String customerId = view.getDeleteCustomerIDFld().getText();
+                    if(model.deleteCustomerRecord(customerId)){
+                        view.displayDeleteSuccess();
+                    } else {
+                        view.displayDeleteFail();
+                    }
+                    
+                }
+            }
+        });
+
 
 
     }
