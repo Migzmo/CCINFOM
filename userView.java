@@ -1659,11 +1659,19 @@ public class userView {
         gbc.weightx = 1;
         newRecordPanel.add(createEmailFld, gbc);
 
+        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Shipping Address:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        newRecordPanel.add(createShippingAddressFld, gbc);
+
         // Add Stock label and field
         
 
         // Add buttons (Create and Discard)
-        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.gridx = 0; gbc.gridy = 5;
         gbc.gridwidth = 1;
         gbc.weightx = 0; // Buttons should not expand
         gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
@@ -2236,6 +2244,180 @@ public class userView {
     
         gbc.gridx = 1;
         newRecordPanel.add(generateSalesReportDiscardBtn, gbc);
+    
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+    
+        frame.revalidate();
+        frame.repaint();
+    }
+    public void displayStocksReportForm() {
+        // Use GridBagLayout for alignment
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+    
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+    
+        // Add Branch ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Branch ID:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportBranchIdField, gbc);
+    
+        // Add Enter Month label and field
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Month:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportMonthField, gbc);
+    
+        // Add Enter Year label and field
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Year:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportYearField, gbc);
+    
+        // Add buttons (Generate and Discard)
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(generateBranchStockReportGnrtBtn, gbc);
+    
+        gbc.gridx = 1;
+        newRecordPanel.add(generateBranchStockReportDiscardBtn, gbc);
+    
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+    
+        frame.revalidate();
+        frame.repaint();
+    }
+    public void displayTicketsReportForm() {
+        // Use GridBagLayout for alignment
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+    
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+    
+        // Add Branch ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Branch ID:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportBranchIdField, gbc);
+    
+        // Add Enter Month label and field
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Month:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportMonthField, gbc);
+    
+        // Add Enter Year label and field
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Year:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportYearField, gbc);
+    
+        // Add buttons (Generate and Discard)
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(generateCustomerTicketReportGnrtBtn, gbc);
+    
+        gbc.gridx = 1;
+        newRecordPanel.add(generateCustomerTicketReportDiscardBtn, gbc);
+    
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+    
+        frame.revalidate();
+        frame.repaint();
+    }
+    public void displaySatisfactionReportForm() {
+        // Use GridBagLayout for alignment
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+    
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+    
+        // Add Branch ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Branch ID:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportBranchIdField, gbc);
+    
+        // Add Enter Month label and field
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Month:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportMonthField, gbc);
+    
+        // Add Enter Year label and field
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Year:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportYearField, gbc);
+    
+        // Add buttons (Generate and Discard)
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(generateCustomerSatisifactioGnrtBtn, gbc);
+    
+        gbc.gridx = 1;
+        newRecordPanel.add(generateCustomerSatisifactioDiscardBtn, gbc);
     
         // Update promptPanel
         promptPanel.setLayout(new BorderLayout());

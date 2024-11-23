@@ -629,6 +629,93 @@ public class ComputerStoreController {
             }
         });
 
+        this.view.setGenerateBranchStockReportBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayStocksReportForm();
+            }
+        });
+        this.view.setGenerateBranchStockReportGnrtBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String branchId = view.getBranchIdField().getText();
+                String month = view.getReportMonthField().getText();
+                String year = view.getReportYearField().getText();
+
+                if(model.generateStockReport(branchId, month, year)){
+                    view.displayStockReportSuccess();
+                } else {
+                    view.displayStockReportFail();
+                }
+                view.clearGenerateForm();
+            }
+        });
+        this.view.setGenerateCustomerSatisifactioBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayTicketsReportForm();
+            }
+        });
+        this.view.setGenerateCustomerSatisifactioGnrtBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String month = view.getReportMonthField().getText();
+                String year = view.getReportYearField().getText();
+                String branchId = view.getReportBranchIdField().getText();
+                if(model.generateSatisfactionReport(branchId, month, year)){
+                    view.displayTicketReportSuccess();
+                } else {
+                    view.displayTicketReportFail();
+                }
+                view.clearGenerateForm();
+            }
+        });
+        this.view.setGenerateCustomerTicketReportBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.displayTicketsReportForm();
+            }
+        });
+        this.view.setGenerateCustomerTicketReportGnrtBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String month = view.getReportMonthField().getText();
+                String year = view.getReportYearField().getText();
+                String branchId = view.getReportBranchIdField().getText();
+                if(model.generateTicketReport(branchId, month, year)){
+                    view.displayTicketReportSuccess();
+                } else {
+                    view.displayTicketReportFail();
+                }
+                view.clearGenerateForm();
+            }
+        });
+        this.view.setGenerateSalesReportDiscardBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.clearGenerateForm();
+            }
+        });
+        this.view.setGenerateBranchStockReportDiscardBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.clearGenerateForm();
+            }
+        });
+        this.view.setGenerateCustomerSatisifactioDiscardBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.clearGenerateForm();
+            }
+        });
+        this.view.setGenerateCustomerTicketReportDiscardBtnListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                view.clearGenerateForm();
+            }
+        });
+        
+
 
 
 
