@@ -183,6 +183,28 @@ public class userView {
     private JTextField newJobIdField;
     private JTextField departmentIdField;
     private JTextField reasonField;
+    //Report generation
+    private JButton generateSalesReportBtn;
+    private JButton generateBranchStockReportBtn;
+    private JButton generateCustomerTicketReportBtn;
+    private JButton generateCustomerSatisifactioBtn;
+
+    //report
+    private JTextField reportMonthField;
+    private JTextField reportYearField;
+    private JTextField reportBranchIdField;
+    
+    private JButton generateSalesReportGnrtBtn;
+    private JButton generateBranchStockReportGnrtBtn;
+    private JButton generateCustomerTicketReportGnrtBtn;
+    private JButton generateCustomerSatisifactioGnrtBtn;
+
+    private JButton generateSalesReportDiscardBtn;
+    private JButton generateBranchStockReportDiscardBtn;
+    private JButton generateCustomerTicketReportDiscardBtn;
+    private JButton generateCustomerSatisifactioDiscardBtn;
+    
+
 
     public userView() {
         frame = new JFrame("Computer Retail Store Management");
@@ -377,6 +399,27 @@ public class userView {
         promptPanel.setBackground(Color.LIGHT_GRAY);
         promptPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        //Generate Reports
+        generateSalesReportBtn = new JButton("Generate Sales Report");
+        generateBranchStockReportBtn = new JButton("Generate Branch Stock Report");
+        generateCustomerTicketReportBtn = new JButton("Generate Customer Ticket Report");
+        generateCustomerSatisifactioBtn = new JButton("Generate Customer Satisfaction Report");
+
+        reportBranchIdField = new JTextField();
+        reportMonthField = new JTextField();
+        reportYearField = new JTextField();
+
+        generateSalesReportGnrtBtn = new JButton("Generate");
+        generateBranchStockReportGnrtBtn = new JButton("Generate");
+        generateCustomerTicketReportGnrtBtn = new JButton("Generate");
+        generateCustomerSatisifactioGnrtBtn = new JButton("Generate");
+
+        generateSalesReportDiscardBtn = new JButton("Discard");
+        generateBranchStockReportDiscardBtn = new JButton("Discard");
+        generateCustomerTicketReportDiscardBtn = new JButton("Discard");
+        generateCustomerSatisifactioDiscardBtn = new JButton("Discard");
+
+        
         // Adds MainUIPanel to frame.
         frame.add(mainUIPanel);
         frame.setVisible(true);
@@ -410,6 +453,50 @@ public class userView {
     }
 
     
+    // ----
+
+    // generate Reports buttons action listener
+    public void setGenerateSalesReportBtnListener(ActionListener actionListener) {
+        generateSalesReportBtn.addActionListener(actionListener);
+    }
+    public void setGenerateBranchStockReportBtnListener(ActionListener actionListener) {
+        generateBranchStockReportBtn.addActionListener(actionListener);
+    }
+    public void setGenerateCustomerTicketReportBtnListener(ActionListener actionListener) {
+        generateCustomerTicketReportBtn.addActionListener(actionListener);
+    }
+    public void setGenerateCustomerSatisifactioBtnListener(ActionListener actionListener) {
+        generateCustomerSatisifactioBtn.addActionListener(actionListener);
+    }
+
+    public void setGenerateSalesReportGnrtBtnListener(ActionListener actionListener) {
+        generateSalesReportGnrtBtn.addActionListener(actionListener);
+    }
+    public void setGenerateBranchStockReportGnrtBtnListener(ActionListener actionListener) {
+        generateBranchStockReportGnrtBtn.addActionListener(actionListener);
+    }
+    public void setGenerateCustomerTicketReportGnrtBtnListener(ActionListener actionListener) {
+        generateCustomerTicketReportGnrtBtn.addActionListener(actionListener);
+    }
+    public void setGenerateCustomerSatisifactioGnrtBtnListener(ActionListener actionListener) {
+        generateCustomerSatisifactioGnrtBtn.addActionListener(actionListener);
+    }
+
+    public void setGenerateSalesReportDiscardBtnListener(ActionListener actionListener) {
+        generateSalesReportDiscardBtn.addActionListener(actionListener);
+    }
+    public void setGenerateBranchStockReportDiscardBtnListener(ActionListener actionListener) {
+        generateBranchStockReportDiscardBtn.addActionListener(actionListener);
+    }
+    public void setGenerateCustomerTicketReportDiscardBtnListener(ActionListener actionListener) {
+        generateCustomerTicketReportDiscardBtn.addActionListener(actionListener);
+    }
+    public void setGenerateCustomerSatisifactioDiscardBtnListener(ActionListener actionListener) {
+        generateCustomerSatisifactioDiscardBtn.addActionListener(actionListener);
+    }
+
+
+
     // ----
     public void setbacktoManagePickBtnListener(ActionListener actionListener) {
         backtoManagePickBtn.addActionListener(actionListener);
@@ -1308,7 +1395,7 @@ public class userView {
 
     gbc.gridx = 1;
     gbc.weightx = 1; // Allow text fields to expand horizontally
-    newRecordPanel.add(readProductIDFld, gbc);
+    newRecordPanel.add(readEmployeeIdFld, gbc);
 
 
     // Add buttons (Create and Discard)
@@ -1572,11 +1659,19 @@ public class userView {
         gbc.weightx = 1;
         newRecordPanel.add(createEmailFld, gbc);
 
+        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Shipping Address:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        newRecordPanel.add(createShippingAddressFld, gbc);
+
         // Add Stock label and field
         
 
         // Add buttons (Create and Discard)
-        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.gridx = 0; gbc.gridy = 5;
         gbc.gridwidth = 1;
         gbc.weightx = 0; // Buttons should not expand
         gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
@@ -2053,7 +2148,287 @@ public class userView {
     }
 
 
+    public void displayReportGeneration(){
+        JLabel managementLabel = new JLabel("Report Generation");
+        managementLabel.setHorizontalAlignment(JLabel.CENTER);
+        managementLabel.setFont(managementLabel.getFont().deriveFont(15f));
+        
 
+        JPanel managementPanel = new JPanel(new BorderLayout());
+        managementPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+
+        JPanel manageRecordUiPanel = new JPanel();
+        manageRecordUiPanel = new JPanel(new GridLayout(6, 1, 0, 20));
+        manageRecordUiPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+
+
+        manageRecordUiPanel.add(managementLabel);
+        manageRecordUiPanel.add(generateSalesReportBtn);
+        manageRecordUiPanel.add(generateBranchStockReportBtn);
+        manageRecordUiPanel.add(generateCustomerTicketReportBtn);
+        manageRecordUiPanel.add(generateCustomerSatisifactioBtn);
+        manageRecordUiPanel.add(transactionsBackBtn);
+
+        
+
+        JPanel promptPlaceHolder = new JPanel();
+        promptPlaceHolder.setLayout(new GridLayout(2, 1, 0, 10));
+        promptPlaceHolder.setPreferredSize(new Dimension(250,80));
+        promptPlaceHolder.setBackground(Color.LIGHT_GRAY);
+
+        JLabel promptLabel = new JLabel("Select a report to generate");
+        promptLabel.setHorizontalAlignment(JLabel.CENTER);
+        promptPanel.removeAll();
+        promptPlaceHolder.add(promptLabel);
+        promptPanel.add(promptPlaceHolder);
+
+        JSplitPane managementSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, manageRecordUiPanel, promptPanel);
+        managementSplitPane.setResizeWeight(0.5);
+        managementSplitPane.setDividerLocation(250);
+        managementSplitPane.setEnabled(false);
+        managementPanel.add(managementSplitPane);
+
+        frame.getContentPane().removeAll();
+        frame.add(managementPanel);
+        frame.revalidate();
+        frame.repaint();
+
+    }
+
+    public void displaySalesReportForm() {
+        // Use GridBagLayout for alignment
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+    
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+    
+        // Add Branch ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Branch ID:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportBranchIdField, gbc);
+    
+        // Add Enter Month label and field
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Month:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportMonthField, gbc);
+    
+        // Add Enter Year label and field
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Year:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportYearField, gbc);
+    
+        // Add buttons (Generate and Discard)
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(generateSalesReportGnrtBtn, gbc);
+    
+        gbc.gridx = 1;
+        newRecordPanel.add(generateSalesReportDiscardBtn, gbc);
+    
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+    
+        frame.revalidate();
+        frame.repaint();
+    }
+    public void displayStocksReportForm() {
+        // Use GridBagLayout for alignment
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+    
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+    
+        // Add Branch ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Branch ID:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportBranchIdField, gbc);
+    
+        // Add Enter Month label and field
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Month:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportMonthField, gbc);
+    
+        // Add Enter Year label and field
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Year:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportYearField, gbc);
+    
+        // Add buttons (Generate and Discard)
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(generateBranchStockReportGnrtBtn, gbc);
+    
+        gbc.gridx = 1;
+        newRecordPanel.add(generateBranchStockReportDiscardBtn, gbc);
+    
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+    
+        frame.revalidate();
+        frame.repaint();
+    }
+    public void displayTicketsReportForm() {
+        // Use GridBagLayout for alignment
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+    
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+    
+        // Add Branch ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Branch ID:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportBranchIdField, gbc);
+    
+        // Add Enter Month label and field
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Month:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportMonthField, gbc);
+    
+        // Add Enter Year label and field
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Year:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportYearField, gbc);
+    
+        // Add buttons (Generate and Discard)
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(generateCustomerTicketReportGnrtBtn, gbc);
+    
+        gbc.gridx = 1;
+        newRecordPanel.add(generateCustomerTicketReportDiscardBtn, gbc);
+    
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+    
+        frame.revalidate();
+        frame.repaint();
+    }
+    public void displaySatisfactionReportForm() {
+        // Use GridBagLayout for alignment
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+    
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+    
+        // Add Branch ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Branch ID:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportBranchIdField, gbc);
+    
+        // Add Enter Month label and field
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Month:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportMonthField, gbc);
+    
+        // Add Enter Year label and field
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Enter Year:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(reportYearField, gbc);
+    
+        // Add buttons (Generate and Discard)
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(generateCustomerSatisifactioGnrtBtn, gbc);
+    
+        gbc.gridx = 1;
+        newRecordPanel.add(generateCustomerSatisifactioDiscardBtn, gbc);
+    
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+    
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    
     // Getters and Setters
     public JTextField getEmployeeIdField() {
         return employeeIdField;
@@ -2302,6 +2677,11 @@ public class userView {
         deleteBranchIDFld.setText("");
 
     }
+    public void clearGenerateForm() {
+        reportBranchIdField.setText("");
+        reportMonthField.setText("");
+        reportYearField.setText("");
+    }
 
     public JTextField getCreateproductNameFld() {
         return createproductNameFld;
@@ -2437,6 +2817,46 @@ public class userView {
     public JTextField getDeleteBranchIDFld() {
         return deleteBranchIDFld;
     }
+
+    public JTextField getReportMonthField() {
+        return reportMonthField;
+    }
+
+    public JTextField getReportYearField() {
+        return reportYearField;
+    }
+
+    public JTextField getReportBranchIdField() {
+        return reportBranchIdField;
+    }
+    public void displaySalesReportSuccess() {
+        JOptionPane.showMessageDialog(frame, "Sales report generated", "Report Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void displaySalesReportFail() {
+        JOptionPane.showMessageDialog(frame, "Sales report not generated", "Report Fail", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void displayStockReportSuccess() {
+        JOptionPane.showMessageDialog(frame, "Stock report generated", "Report Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void displayStockReportFail() {
+        JOptionPane.showMessageDialog(frame, "Stock report not generated", "Report Fail", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void displayTicketReportSuccess() {
+        JOptionPane.showMessageDialog(frame, "Ticket report generated", "Report Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void displayTicketReportFail() {
+        JOptionPane.showMessageDialog(frame, "Ticket report not generated", "Report Fail", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void displaySatisfactionReportSuccess() {
+        JOptionPane.showMessageDialog(frame, "Satisfaction report generated", "Report Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+    public void displaySatisfactionReportFail() {
+        JOptionPane.showMessageDialog(frame, "Satisfaction report not generated", "Report Fail", JOptionPane.ERROR_MESSAGE);
+    }
+    
 
     
 
