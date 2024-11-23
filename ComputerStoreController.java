@@ -338,7 +338,7 @@ public class ComputerStoreController {
             public void actionPerformed(ActionEvent e) {
                 String partId = view.getReadProductIDFld().getText();
                 if(model.readComputerPartRecord(partId)){
-                    view.displayReadSuccess();
+                    // view.displayReadSuccess();
                 } else {
                     // view.displayReadFail();
                 }
@@ -391,10 +391,10 @@ public class ComputerStoreController {
                 if (response == JOptionPane.YES_OPTION) {
                     // Call the method to delete the employee
                     String partId = view.getDeleteProductIDFld().getText();
-                    if(model.deleteComputerPartRecord(partId)){
-                        view.displayDeleteSuccess();
+                    if (model.deleteComputerPartRecord(partId)){
+                        // view.displayDeleteSuccess();
                     } else {
-                        view.displayDeleteFail();
+                        // view.displayDeleteFail();
                     }
                     
                 }
