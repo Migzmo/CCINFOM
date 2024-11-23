@@ -49,7 +49,7 @@ public class ComputerStoreController {
         this.view.addSupplyProductsListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.displaySupplyProducts();;
+                model.supplyProducts();
             }
         });
 
@@ -117,7 +117,7 @@ public class ComputerStoreController {
             //need to replace this with actualy getting of values and integrating to model and stuff
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.displaySupplyProducts();
+                model.supplyProducts();
             }
         });
         this.view.setDiscardSupplyButtonListener(new ActionListener() {
@@ -657,7 +657,7 @@ public class ComputerStoreController {
         this.view.setGenerateBranchStockReportGnrtBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String branchId = view.getBranchIdField().getText();
+                String branchId = view.getReportBranchIdField().getText();
                 String month = view.getReportMonthField().getText();
                 String year = view.getReportYearField().getText();
 
@@ -672,7 +672,7 @@ public class ComputerStoreController {
         this.view.setGenerateCustomerSatisifactioBtnListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                view.displayTicketsReportForm();
+                view.displaySatisfactionReportForm();
             }
         });
         this.view.setGenerateCustomerSatisifactioGnrtBtnListener(new ActionListener() {

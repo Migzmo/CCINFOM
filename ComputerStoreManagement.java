@@ -760,14 +760,125 @@ public class ComputerStoreManagement {
         }
     }
 
-    public void supplyProducts() {
-        String productId = JOptionPane.showInputDialog("Enter Product ID:");
-        String sourceBranchId = JOptionPane.showInputDialog("Enter Source Branch ID:");
-        String destinationBranchId = JOptionPane.showInputDialog("Enter Destination Branch ID:");
-        String quantity = JOptionPane.showInputDialog("Enter Quantity:");
-        String transferPerson = JOptionPane.showInputDialog("Enter Name of Transfer Person:");
+    public boolean supplyProducts() {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // Get input from the user
+            String fromBranchId = JOptionPane.showInputDialog("Enter Source Branch ID:");
+            String toBranchId = JOptionPane.showInputDialog("Enter Destination Branch ID:");
+            String productId = JOptionPane.showInputDialog("Enter Product ID:");
+            String quantity = JOptionPane.showInputDialog("Enter Quantity to Transfer:");
+            String inCharge = JOptionPane.showInputDialog("Enter ID of Person In-Charge:");
+    
+            // Convert quantity to an integer
+            int quantityToTransfer = Integer.parseInt(quantity);
 
+            // Initialize product details for future use
+            int stock = 0;
+
+            String query1 = "SELECT stock FROM computerparts WHERE product_id = ? AND branch_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query1)) {
+                preparedStatement.setInt(1, Integer.parseInt(productId));
+                preparedStatement.setInt(2, Integer.parseInt(fromBranchId));
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {       
+                    if(resultSet.next()){
+                        // Product exists in the destination branch, update stock
+                        stock = resultSet.getInt("stock");
+                    }
+                }
+            }
+
+            int newStock = (stock - quantityToTransfer);
+
+            // Deduct stock from the source branch
+            String deductStock = "UPDATE computerparts SET stock = ? WHERE product_id = ? AND branch_id = ?";
+            try (PreparedStatement deductStmt = connection.prepareStatement(deductStock)) {
+                deductStmt.setInt(1, newStock);
+                deductStmt.setInt(2, Integer.parseInt(productId));
+                deductStmt.setInt(3, Integer.parseInt(fromBranchId));
+                deductStmt.executeUpdate();
+            }
+        
+            // Check if the product exists in the destination branch
+            String query = "SELECT classification, product_name, description, price, warranty_duration, stock FROM computerparts WHERE product_id = ? AND branch_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, Integer.parseInt(productId));
+                preparedStatement.setInt(2, Integer.parseInt(fromBranchId));
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+        
+                    // Initialize product details for future use
+                    String classification = null, productName = null, description = null;
+                    Double price = 0.0;
+                    int warrantyDuration = 0;
+                    
+                    if(resultSet.next()){
+                        // Product exists in the destination branch, update stock
+                        classification = resultSet.getString("classification");
+                        productName = resultSet.getString("product_name");
+                        description = resultSet.getString("description");
+                        price = resultSet.getDouble("price");
+                        warrantyDuration = resultSet.getInt("warranty_duration");
+    
+                        // Get the most recent product_id from the computerparts table
+                        String maxProductQuery = "SELECT MAX(product_id) as recent_id FROM computerparts";
+                        try (PreparedStatement maxStmt = connection.prepareStatement(maxProductQuery);
+                             ResultSet rs = maxStmt.executeQuery()) {
+                            int newProductId = 0;
+                            if (rs.next()) {
+                                newProductId = rs.getInt("recent_id") + 1;
+                            } else {
+                                newProductId = 1; // If no products are found, start with ID 1
+                            }
+        
+                            // Insert new stock record into the destination branch
+                            String createStock = "INSERT INTO computerparts (product_id, branch_id, classification, product_name, description, stock, price, warranty_duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                            try (PreparedStatement addStmt = connection.prepareStatement(createStock)) {
+                                addStmt.setInt(1, newProductId);
+                                addStmt.setInt(2, Integer.parseInt(toBranchId));
+                                addStmt.setString(3, classification);
+                                addStmt.setString(4, productName);
+                                addStmt.setString(5, description);
+                                addStmt.setInt(6, quantityToTransfer);
+                                addStmt.setDouble(7, price);
+                                addStmt.setInt(8, warrantyDuration);
+                                addStmt.executeUpdate();
+                            }
+                        }
+                    }    
+                }
+            }
+        
+            // Get the next transfer ID
+            String getSalesIdQuery = "SELECT MAX(transfer_id) FROM producttransfers";
+            int nextSalesId = 1;  // Default value if the table is empty
+            try (Statement statement = connection.createStatement(); ResultSet rs = statement.executeQuery(getSalesIdQuery)) {
+                if (rs.next()) {
+                    nextSalesId = rs.getInt(1) + 1;  // Increment last transfer_id
+                }
+            }
+        
+            // Record the transfer in the transfers table
+            String recordTransfer = "INSERT INTO producttransfers (transfer_id, product_id, from_branch_id, to_branch_id, quantity, transfer_date, person_in_charge_id) VALUES (?, ?, ?, ?, ?, NOW(), ?)";
+            try (PreparedStatement transferStmt = connection.prepareStatement(recordTransfer)) {
+                transferStmt.setInt(1, nextSalesId);
+                transferStmt.setInt(2, Integer.parseInt(productId));
+                transferStmt.setInt(3, Integer.parseInt(fromBranchId));
+                transferStmt.setInt(4, Integer.parseInt(toBranchId));
+                transferStmt.setInt(5, quantityToTransfer);
+                transferStmt.setString(6, inCharge);
+                transferStmt.executeUpdate();
+            }
+        
+            JOptionPane.showMessageDialog(null, "Transfer recorded successfully!");
+            return true;
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
+            return false;
+        }
     }
+    
+    
 
     public boolean validTransfer(String employeeId, String newBranchId, String newJobId, String departmentId, String reason, StringBuilder error) {
         boolean valid = true;
@@ -1070,3 +1181,5 @@ public class ComputerStoreManagement {
         }
     }
 }
+
+
