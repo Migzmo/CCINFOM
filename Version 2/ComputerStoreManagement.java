@@ -123,6 +123,96 @@ public class ComputerStoreManagement {
 
     // ---- CRUD -----
 
+    public boolean createComputerPartRecord(String branchId, String classification, String productName,  
+                                        String description, int stock, double price, int warrantyDuration) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            // Query to get the maximum product_id from the ComputerParts table.
+            String getProductIdQuery = "SELECT MAX(product_id) FROM ComputerParts";
+            int nextProductId = 1;  // Default value if the table is empty
+            
+            // Execute the query to get the maximum product_id.
+            try (Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(getProductIdQuery)) {
+                if (resultSet.next()) {
+                    nextProductId = resultSet.getInt(1) + 1;  // Increment last product_id
+                }
+            }
+
+            // Insert the new computer part record with the incremented product_id.
+            String query = "INSERT INTO ComputerParts (product_id, branch_id, classification, product_name, description, stock, price, warranty_duration) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, nextProductId);
+                preparedStatement.setInt(2, Integer.parseInt(branchId));
+                preparedStatement.setString(3, classification);
+                preparedStatement.setString(4, productName);
+                preparedStatement.setString(5, description);
+                preparedStatement.setInt(6, stock);
+                preparedStatement.setDouble(7, price);
+                preparedStatement.setInt(8, warrantyDuration);
+                preparedStatement.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Added Successfully to the Computer Parts Record.");
+            }
+
+            // Return true if the operation was successful.
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to add the computer part record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    public boolean readComputerPartRecord(String productId) {
+        String query = "SELECT b.branch_name, cp.classification, cp.product_name, " +
+                       "cp.description, cp.stock, cp.price, cp.warranty_duration " +
+                       "FROM ComputerParts cp " +
+                       "JOIN Branches b ON cp.branch_id = b.branch_id " +
+                       "WHERE cp.product_id = ?";
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, Integer.parseInt(productId));
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    String record = "Branch Name: " + rs.getString("branch_name") + "\n" +
+                                    "Classification: " + rs.getString("classification") + "\n" +
+                                    "Product Name: " + rs.getString("product_name") + "\n" +
+                                    "Description: " + rs.getString("description") + "\n" +
+                                    "Stock: " + rs.getInt("stock") + "\n" +
+                                    "Price: " + rs.getDouble("price") + "\n" +
+                                    "Warranty Duration: " + rs.getInt("warranty_duration");
+                    JOptionPane.showMessageDialog(null, "Computer Part Record Found!\n" + record);
+                    return true;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Computer Part Record Not Found!");
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();  // Log the exception details
+            JOptionPane.showMessageDialog(null, "Error: Unable to read the computer part record. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+
+    public boolean updateComputerPartRecord(String productId, String branchId, String classification, String productName, 
+                                            String description, int stock, double price, int warrantyDuration) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+
+        } catch (Exception ex) {
+            
+        }
+        return false;
+    }
+
+    public boolean deleteComputerPartRecord(String productId) {
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+
+        } catch (Exception ex) {
+            
+        }
+        return false;
+    }
+
     // Creates a new employee record in the database. 
     public boolean createEmployee(String firstName, String lastName, String branchId, String jobId, String departmentId, String hireDate) {
         // Establish a connection to the database using the provided URL, username, and password.
@@ -163,18 +253,18 @@ public class ComputerStoreManagement {
 
     public boolean readEmployee(String employeeId) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                String query = "SELECT * FROM Employees WHERE employee_id = ?";
-                try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-                    preparedStatement.setInt(1, Integer.parseInt(employeeId));
-                    ResultSet rs = preparedStatement.executeQuery();
-                    if (rs.next()) {
-                        String name = rs.getString("employee_firstname") + " " + rs.getString("employee_lastname");
-                        JOptionPane.showMessageDialog(null, "Employee Found: " + name);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Employee Not Found!");
-                    }
+            String query = "SELECT * FROM Employees WHERE employee_id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, Integer.parseInt(employeeId));
+                ResultSet rs = preparedStatement.executeQuery();
+                if (rs.next()) {
+                    String name = rs.getString("employee_firstname") + " " + rs.getString("employee_lastname");
+                    JOptionPane.showMessageDialog(null, "Employee Found: " + name);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Employee Not Found!");
                 }
-                return true;
+            }
+            return true;
         } catch (Exception ex) {
             return false;
         }
