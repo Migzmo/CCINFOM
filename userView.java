@@ -770,12 +770,11 @@ public class userView {
         branchIdField = new JTextField();
         customerIdField = new JTextField();
         quantityField = new JTextField();
-        priceField = new JTextField();
         
         JPanel sellProductMainPanel = new JPanel(new BorderLayout());
         sellProductMainPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
-        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
 
         inputPanel.add(new JLabel("Product ID:"));
        
@@ -787,8 +786,6 @@ public class userView {
         inputPanel.add(customerIdField);
         inputPanel.add(new JLabel("Quantity:"));
         inputPanel.add(quantityField);
-        inputPanel.add(new JLabel("Price per Item:"));
-        inputPanel.add(priceField);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
       
@@ -1395,7 +1392,7 @@ public class userView {
 
     gbc.gridx = 1;
     gbc.weightx = 1; // Allow text fields to expand horizontally
-    newRecordPanel.add(readEmployeeIdFld, gbc);
+    newRecordPanel.add(readProductIDFld, gbc);
 
 
     // Add buttons (Create and Discard)

@@ -330,7 +330,7 @@ public class ComputerStoreController {
                 String branchID = view.getCreatebranchIdFld().getText();
                 String productName = view.getCreateproductNameFld().getText();
                 String partType = view.getCreateClassField().getText();
-                int partPrice = Integer.parseInt(view.getCreatepriceFld().getText());
+                Double partPrice = Double.parseDouble(view.getCreatepriceFld().getText());
                 String partDescription= view.getCreatedescriptionFld().getText();
                 int partStock =  Integer.parseInt(view.getCreatequantityFld().getText());
                 int partWarranty = Integer.parseInt(view.getCreateWwarrantyField().getText());
@@ -370,14 +370,14 @@ public class ComputerStoreController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String partId = view.getUpdateProductIDFld().getText();
-                String branchID = view.getBranchIdField().getText();
+                String branchID = view.getUpdateBranchIdFld().getText();
                 String productName = view.getUpdateproductNameFld().getText();
                 String partType = view.getUpdateClassField().getText();
-                int partPrice = Integer.parseInt(view.getUpdatepriceFld().getText());
+                Double partPrice = Double.parseDouble(view.getUpdatepriceFld().getText());
                 String partDescription= view.getUpdatedescriptionFld().getText();
                 int partStock =  Integer.parseInt(view.getUpdatequantityFld().getText());
                 int partWarranty = Integer.parseInt(view.getUpdateWwarrantyField().getText());
-                if(model.updateComputerPartRecord(partId, branchID, partDescription, productName, partDescription, partStock, partPrice, partWarranty)){
+                if(model.updateComputerPartRecord(partId, branchID, partType, productName, partDescription, partStock, partPrice, partWarranty)){
                     view.displayUpdateSuccess();
                 } else {
                     view.displayUpdateFail();
@@ -436,7 +436,7 @@ public class ComputerStoreController {
             public void actionPerformed(ActionEvent e) {
                 String firstName = view.getCreateFirstNameFld().getText();
                 String lastName = view.getCreateLastNameFld().getText();
-                int contactNumber = Integer.parseInt(view.getCreateContactNumberFld().getText());
+                Long contactNumber = Long.parseLong(view.getCreateContactNumberFld().getText());
                 String emailAddress = view.getCreateEmailFld().getText();
                 String shippingAddresss = view.getCreateShippingAddressFld().getText();
                 

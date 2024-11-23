@@ -158,6 +158,10 @@ public class ComputerStoreManagement {
 
     public boolean createComputerPartRecord(String branchId, String classification, String productName,  
                                             String description, int stock, double price, int warrantyDuration) {
+        if (stock < 0 || price < 0 || warrantyDuration < 0) {
+            return false;
+        }
+        
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             // Query to get the maximum product_id from the ComputerParts table.
             String getProductIdQuery = "SELECT MAX(product_id) FROM ComputerParts";
@@ -231,6 +235,10 @@ public class ComputerStoreManagement {
 
     public boolean updateComputerPartRecord(String productId, String branchId, String classification, String productName, 
                                             String description, int stock, double price, int warrantyDuration) {
+        if (stock < 0 || price < 0 || warrantyDuration < 0) {
+            return false;
+        }
+
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             if (isProductIdValid(connection, productId)) {
                 String query = "UPDATE ComputerParts SET branch_id = ?, classification = ?, product_name = ?, description = ?, stock = ?, price = ?, warranty_duration = ? WHERE product_id = ?";
@@ -279,7 +287,7 @@ public class ComputerStoreManagement {
         }
     }
 
-    public boolean createCustomerRecord(String customer_lastname, String customer_firstname, int contact_number, String email_address, String shipping_address) {
+    public boolean createCustomerRecord(String customer_lastname, String customer_firstname, Long contact_number, String email_address, String shipping_address) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             // Query to get the maximum customer_id from the Customers table.
             String getCustomerIdQuery = "SELECT MAX(customer_id) FROM Customers";
@@ -300,7 +308,7 @@ public class ComputerStoreManagement {
                 preparedStatement.setInt(1, nextCustomerId);
                 preparedStatement.setString(2, customer_lastname);
                 preparedStatement.setString(3, customer_firstname);
-                preparedStatement.setInt(4, contact_number);
+                preparedStatement.setLong(4, contact_number);
                 preparedStatement.setString(5, email_address);
                 preparedStatement.setString(6, shipping_address);
                 preparedStatement.executeUpdate();
@@ -434,7 +442,7 @@ public class ComputerStoreManagement {
                     String record = "Branch ID: " + rs.getInt("branch_id") + "\n" +
                                     "Branch Name: " + rs.getString("branch_name") + "\n" +
                                     "Location: " + rs.getString("location") + "\n" +
-                                    "Contact Number: " + rs.getInt("contact_number") + "\n" +
+                                    "Contact Number: " + rs.getLong("contact_number") + "\n" +
                                     "Manager ID: " + rs.getInt("manager_id");
                     JOptionPane.showMessageDialog(null, "View Branch Record\n" + record);
                     return true;
