@@ -616,12 +616,9 @@ public class ComputerStoreManagement {
 
     // ----- Transactions ------
     
-    public boolean sellProducts() {
+    public boolean sellProducts(String productId, String branchId, String customerId, String quantity) {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String productId = JOptionPane.showInputDialog("Enter Product ID:");
-            String branchId = JOptionPane.showInputDialog("Enter Branch ID:");
-            String customerId = JOptionPane.showInputDialog("Enter Customer ID:");
-            String quantity = JOptionPane.showInputDialog("Enter Quantity:");
+            
      
             String getSalesIdQuery = "SELECT MAX(sales_id) FROM sales";
             int nextSalesId = 1;  // Default value if the table is empty
