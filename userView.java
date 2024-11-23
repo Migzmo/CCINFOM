@@ -68,6 +68,12 @@ public class userView {
     private JButton updtComputerPartsBtn;
     private JButton dltComputerPartsBtn;
 
+    private JButton createCustomerBtn;
+    private JButton readCustomerBtn;
+    private JButton updtCustomerBtn;
+    private JButton dltCustomerBtn;
+
+
     private JButton backtoManagePickBtn;
     
     private JButton createEmployeeApplyBtn;
@@ -78,11 +84,19 @@ public class userView {
     private JButton dltEmpDscrdBtn;
     private JButton readEmployeeApplyBtn;
     private JPanel promptPanel;
+
     private JButton updateEmployeeApplybtn;
     private JButton deleteEmployeeApplybtn; 
+
     private JButton readPartsApplyBtn;
     private JButton updatePartsApplyBtn;
     private JButton deleteComputerPartsApplyBtn;
+
+    private JButton createCustomerApplyBtn;
+    private JButton readCustomApplyBtn;
+    private JButton updateCustomerApplyBtn;
+    private JButton deleteCustomerApplyBtn;
+
     
     private JButton cmpterPartsManageButton;
     private JButton customerRecordManageButton;
@@ -101,10 +115,14 @@ public class userView {
     private JTextField createquantityFld;
     private JTextField createpriceFld;
     private JTextField createWwarrantyField;
+    private JTextField createContactNumberFld;
+    private JTextField createEmailFld;
+    private JTextField createShippingAddressFld;
 
 
     private JTextField readEmployeeIdFld;
     private JTextField readProductIDFld;
+    private JTextField readCustomerIDFld;
 
     private JTextField updateEmployeeIdFld;
     private JTextField updateFirstNameFld;
@@ -120,10 +138,17 @@ public class userView {
     private JTextField updatequantityFld;
     private JTextField updatepriceFld;
     private JTextField updateWwarrantyField;
+    private JTextField updateCustomerIDFld;
+    private JTextField updateContactNumberFld;
+    private JTextField updateEmailFld;
+    private JTextField updateShippingAddressFld;
+    
+
     
 
     private JTextField deleteEmployeeIdFld;
     private JTextField deleteProductIDFld;
+    private JTextField deleteCustomerIDFld;
 
     
     // idk yet
@@ -203,10 +228,19 @@ public class userView {
         readEmployeeBtn = new JButton("Read");
         updtEmployeeBtn = new JButton("Update");
         dltEmployeeBtn = new JButton("Delete");
+        //computer parts
         createComputerPartsBtn = new JButton("Create");
         readComputerPartsBtn = new JButton("Read");
         updtComputerPartsBtn = new JButton("Update");
         dltComputerPartsBtn = new JButton("Delete");
+
+        //customer record
+        createCustomerBtn = new JButton("Create");
+        readCustomerBtn = new JButton("Read");  
+        updtCustomerBtn = new JButton("Update");
+        dltCustomerBtn = new JButton("Delete");
+
+        createCustomerApplyBtn = new JButton("Create");
 
 
         createPartsApplyBtn = new JButton("Create");
@@ -233,6 +267,11 @@ public class userView {
         deleteEmployeeApplybtn = new JButton("Delete");
         updatePartsApplyBtn = new JButton("Apply");
         deleteComputerPartsApplyBtn = new JButton("Delete");
+        createCustomerApplyBtn = new JButton("Create");
+        readCustomApplyBtn = new JButton("Search");
+        updateCustomerApplyBtn = new JButton("Apply");
+        deleteCustomerApplyBtn = new JButton("Delete");
+
         //create fields
         createFirstNameFld = new JTextField();
         createLastNameFld = new JTextField();
@@ -246,10 +285,15 @@ public class userView {
         createquantityFld = new JTextField();
         createpriceFld = new JTextField();
         createWwarrantyField = new JTextField();
+        createContactNumberFld = new JTextField();
+        createEmailFld = new JTextField();
+        createShippingAddressFld = new JTextField();
+
 
         //read fields
         readEmployeeIdFld = new JTextField();
         readProductIDFld = new JTextField();
+        readCustomerIDFld = new JTextField();
 
         //update fields
         updateBranchIdFld = new JTextField();
@@ -266,10 +310,16 @@ public class userView {
         updatepriceFld = new JTextField();
         updateWwarrantyField = new JTextField();
         updateProductIDFld = new JTextField();
+        updateCustomerIDFld = new JTextField();
+        updateContactNumberFld = new JTextField();
+        updateEmailFld = new JTextField();
+        updateShippingAddressFld = new JTextField();
+
 
         //delete fields
         deleteEmployeeIdFld = new JTextField();
         deleteProductIDFld = new JTextField();
+        deleteCustomerIDFld = new JTextField();
 
         createEmployeeBtn.setPreferredSize(new Dimension(150,30));
         readEmployeeBtn.setPreferredSize(new Dimension(150,30));
@@ -311,6 +361,7 @@ public class userView {
     public void setbranchRecordButtonListener(ActionListener actionListener) {
         branchRecorManagedButton.addActionListener(actionListener);
     }
+
     
     // ----
     public void setbacktoManagePickBtnListener(ActionListener actionListener) {
@@ -375,6 +426,33 @@ public class userView {
     public void setDeleteComputerPartsApplyButtonListener(ActionListener listener) {
         deleteComputerPartsApplyBtn.addActionListener(listener);
     }
+
+    //CUSTOMER RECORDS
+    public void setCreateCustomerButtonListener(ActionListener listener) {
+        createCustomerBtn.addActionListener(listener);
+    }
+    public void setReadCustomerButtonListener(ActionListener listener) {
+        readCustomerBtn.addActionListener(listener);
+    }
+    public void setUpdateCustomerButtonListener(ActionListener listener) {
+        updtCustomerBtn.addActionListener(listener);
+    }
+    public void setDeleteCustomerButtonListener(ActionListener listener) {
+        dltCustomerBtn.addActionListener(listener);
+    }
+    public void setCreateCustomerApplyButtonListener(ActionListener listener) {
+        createCustomerApplyBtn.addActionListener(listener);
+    }
+    public void setReadCustomerApplyButtonListener(ActionListener listener) {
+        readCustomApplyBtn.addActionListener(listener);
+    }
+    public void setUpdateCustomerApplyButtonListener(ActionListener listener) {
+        updateCustomerApplyBtn.addActionListener(listener);
+    }
+    public void setDeleteCustomerApplyButtonListener(ActionListener listener) {
+        deleteCustomerApplyBtn.addActionListener(listener);
+    }
+
     // ----
     public void setReadEmployeeDiscardButtonListener(ActionListener listener){
         readEmpDscrdBtn.addActionListener(listener);
@@ -661,7 +739,7 @@ public class userView {
 
     // Add management panel to the main frame or another container
     // Assuming 'this' is a JFrame or a container
-
+    promptPanel.removeAll();
     frame.getContentPane().removeAll();
     frame.add(managementPanel, BorderLayout.CENTER);
     frame.revalidate(); 
@@ -1204,7 +1282,7 @@ public class userView {
     
         gbc.gridx = 1;
         gbc.weightx = 1; // Allow text fields to expand horizontally
-        newRecordPanel.add(createbranchIdFld, gbc);
+        newRecordPanel.add(updateBranchIdFld, gbc);
     
         // Add Classification label and field
         gbc.gridx = 0; gbc.gridy = 2;
@@ -1213,7 +1291,7 @@ public class userView {
     
         gbc.gridx = 1;
         gbc.weightx = 1;
-        newRecordPanel.add(createClassField, gbc);
+        newRecordPanel.add(updateClassField, gbc);
     
         // Add Product Name label and field
         gbc.gridx = 0; gbc.gridy = 3;
@@ -1222,7 +1300,7 @@ public class userView {
     
         gbc.gridx = 1;
         gbc.weightx = 1;
-        newRecordPanel.add(createproductNameFld, gbc);
+        newRecordPanel.add(updateproductNameFld, gbc);
     
         // Add Description label and field
         gbc.gridx = 0; gbc.gridy = 4;
@@ -1231,7 +1309,7 @@ public class userView {
     
         gbc.gridx = 1;
         gbc.weightx = 1;
-        newRecordPanel.add(createdescriptionFld, gbc);
+        newRecordPanel.add(updatedescriptionFld, gbc);
     
         // Add Stock label and field
         gbc.gridx = 0; gbc.gridy = 5;
@@ -1240,7 +1318,7 @@ public class userView {
     
         gbc.gridx = 1;
         gbc.weightx = 1;
-        newRecordPanel.add(createquantityFld, gbc);
+        newRecordPanel.add(updatequantityFld, gbc);
     
         // Add Price label and field
         gbc.gridx = 0; gbc.gridy = 6;
@@ -1249,7 +1327,7 @@ public class userView {
     
         gbc.gridx = 1;
         gbc.weightx = 1;
-        newRecordPanel.add(createpriceFld, gbc);
+        newRecordPanel.add(updatepriceFld, gbc);
     
         // Add Warranty duration label and field
         gbc.gridx = 0; gbc.gridy = 7;
@@ -1258,7 +1336,7 @@ public class userView {
     
         gbc.gridx = 1;
         gbc.weightx = 1; // Allow text fields to expand horizontally
-        newRecordPanel.add(createWwarrantyField, gbc);
+        newRecordPanel.add(updateWwarrantyField, gbc);
     
         // Add buttons (Create and Discard)
         gbc.gridx = 0; gbc.gridy = 8;
@@ -1308,6 +1386,300 @@ public class userView {
         gbc.weightx = 0; // Buttons should not expand
         gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
         newRecordPanel.add(deleteComputerPartsApplyBtn, gbc);
+
+        gbc.gridx = 1;
+        newRecordPanel.add(dltEmpDscrdBtn, gbc);
+
+    
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+        
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    public void displayCustomerRecordManagement(){
+        JLabel managementLabel = new JLabel("Customer Record Management");
+        managementLabel.setHorizontalAlignment(JLabel.CENTER);
+        managementLabel.setFont(managementLabel.getFont().deriveFont(15f));
+        
+
+        JPanel managementPanel = new JPanel(new BorderLayout());
+        managementPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+
+        JPanel manageRecordUiPanel = new JPanel();
+        manageRecordUiPanel = new JPanel(new GridLayout(6, 1, 0, 20));
+        manageRecordUiPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
+
+        createEmployeeBtn.setFocusable(false);
+        readEmployeeBtn.setFocusable(false);
+        updtEmployeeBtn.setFocusable(false);
+        dltEmployeeBtn.setFocusable(false);
+
+        manageRecordUiPanel.add(managementLabel);
+        manageRecordUiPanel.add(createCustomerBtn);
+        manageRecordUiPanel.add(readCustomerBtn);
+        manageRecordUiPanel.add(updtCustomerBtn);
+        manageRecordUiPanel.add(dltCustomerBtn);
+        manageRecordUiPanel.add(backtoManagePickBtn);
+
+        
+
+        JPanel promptPlaceHolder = new JPanel();
+        promptPlaceHolder.setLayout(new GridLayout(2, 1, 0, 10));
+        promptPlaceHolder.setPreferredSize(new Dimension(250,80));
+        promptPlaceHolder.setBackground(Color.LIGHT_GRAY);
+
+        JLabel promptLabel = new JLabel("Select an action to perform");
+        promptLabel.setHorizontalAlignment(JLabel.CENTER);
+        
+        promptPlaceHolder.add(promptLabel);
+        promptPanel.add(promptPlaceHolder);
+
+        JSplitPane managementSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, manageRecordUiPanel, promptPanel);
+        managementSplitPane.setResizeWeight(0.5);
+        managementSplitPane.setDividerLocation(250);
+        managementSplitPane.setEnabled(false);
+        managementPanel.add(managementSplitPane);
+
+        frame.getContentPane().removeAll();
+        frame.add(managementPanel);
+        frame.revalidate();
+        frame.repaint();
+    }
+    //String customer_lastname, String customer_firstname, int contact_number, String email_address, String shipping_address
+    public void displayCreateCustomerForm(){
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+
+        // Add Branch ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("First Name:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(createFirstNameFld, gbc);
+
+        // Add Classification label and field
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Last Name:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        newRecordPanel.add(createLastNameFld, gbc);
+
+        // Add Product Name label and field
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Contact Number:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        newRecordPanel.add(createContactNumberFld, gbc);
+
+        // Add Description label and field
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("Email:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        newRecordPanel.add(createEmailFld, gbc);
+
+        // Add Stock label and field
+        
+
+        // Add buttons (Create and Discard)
+        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(createCustomerApplyBtn, gbc);
+
+        gbc.gridx = 1;
+        newRecordPanel.add(createEmpDscrdButton, gbc);
+
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+
+        frame.revalidate();
+        frame.repaint();
+    }   
+
+    public void displayReadCustomerForm(){
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+
+        // Add Product ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Customer ID:"));
+
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(readCustomerIDFld, gbc);
+
+
+        // Add buttons (Create and Discard)
+        gbc.gridx = 0; gbc.gridy =1;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(readCustomApplyBtn, gbc);
+
+        gbc.gridx = 1;
+        newRecordPanel.add(readEmpDscrdBtn, gbc);
+
+
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+        
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    //String customer_id, String customer_lastname, String customer_firstname, int contact_number, String email_address, String shipping_address
+    public void displayUpdateCustomerForm() {
+        // Use GridBagLayout for alignment
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+    
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        //
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Customer ID:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(updateCustomerIDFld, gbc);
+        // Add Branch ID label and field
+        gbc.gridx = 0; gbc.gridy = 1;
+        newRecordPanel.add(new JLabel("New First Name:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(updateFirstNameFld, gbc);
+    
+        // Add Classification label and field
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("New Last Name:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        newRecordPanel.add(updateLastNameFld, gbc);
+    
+        // Add Product Name label and field
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("New Contact Number:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        newRecordPanel.add(updateContactNumberFld, gbc);
+    
+        // Add Description label and field
+        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("New Email Address:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        newRecordPanel.add(updateEmailFld, gbc);
+    
+        // Add Stock label and field
+        gbc.gridx = 0; gbc.gridy = 5;
+        gbc.weightx = 0;
+        newRecordPanel.add(new JLabel("New Shipping Address:"), gbc);
+    
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        newRecordPanel.add(updateShippingAddressFld, gbc);
+    
+        
+        
+    
+        // Add buttons (Create and Discard)
+        gbc.gridx = 0; gbc.gridy = 6;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(updateCustomerApplyBtn, gbc);
+    
+        gbc.gridx = 1;
+        newRecordPanel.add(updEmpDscrdBtn, gbc);
+    
+        // Update promptPanel
+        promptPanel.setLayout(new BorderLayout());
+        promptPanel.removeAll();
+        promptPanel.add(newRecordPanel, BorderLayout.CENTER);
+    
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    public void displayDeleteCustomerForm() {
+        // Use GridBagLayout for alignment
+        JPanel newRecordPanel = new JPanel(new GridBagLayout());
+        newRecordPanel.setBackground(Color.LIGHT_GRAY);
+        newRecordPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+        gbc.anchor = GridBagConstraints.WEST; // Align labels to the left
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Text fields expand horizontally
+
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+
+        // Add Product ID label and field
+        gbc.gridx = 0; gbc.gridy = 0;
+        newRecordPanel.add(new JLabel("Customer ID:"));
+
+        gbc.gridx = 1;
+        gbc.weightx = 1; // Allow text fields to expand horizontally
+        newRecordPanel.add(deleteCustomerIDFld, gbc);
+
+
+        // Add buttons (Create and Discard)
+        gbc.gridx = 0; gbc.gridy =1;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0; // Buttons should not expand
+        gbc.anchor = GridBagConstraints.CENTER; // Center align buttons
+        newRecordPanel.add(deleteCustomerApplyBtn, gbc);
 
         gbc.gridx = 1;
         newRecordPanel.add(dltEmpDscrdBtn, gbc);
@@ -1538,15 +1910,21 @@ public class userView {
         createquantityFld.setText("");
         createpriceFld.setText("");
         createWwarrantyField.setText("");
+        createEmailFld.setText("");
+        createContactNumberFld.setText("");
+        createShippingAddressFld.setText("");
+
 
     }
     public void clearReadForm() {
         readEmployeeIdFld.setText("");
         readProductIDFld.setText("");
+        readCustomerIDFld.setText("");
     }
     public void clearDeleteForm() {
         deleteEmployeeIdFld.setText("");
         deleteProductIDFld.setText("");
+        deleteCustomerIDFld.setText("");
     }
 
     public JTextField getCreateproductNameFld() {
@@ -1606,6 +1984,42 @@ public class userView {
 
     public JTextField getDeleteProductIDFld() {
         return deleteProductIDFld;
+    }
+
+    public JTextField getCreateContactNumberFld() {
+        return createContactNumberFld;
+    }
+
+    public JTextField getCreateEmailFld() {
+        return createEmailFld;
+    }
+
+    public JTextField getCreateShippingAddressFld() {
+        return createShippingAddressFld;
+    }
+
+    public JTextField getReadCustomerIDFld() {
+        return readCustomerIDFld;
+    }
+
+    public JTextField getUpdateCustomerIDFld() {
+        return updateCustomerIDFld;
+    }
+
+    public JTextField getUpdateContactNumberFld() {
+        return updateContactNumberFld;
+    }
+
+    public JTextField getUpdateEmailFld() {
+        return updateEmailFld;
+    }
+
+    public JTextField getUpdateShippingAddressFld() {
+        return updateShippingAddressFld;
+    }
+
+    public JTextField getDeleteCustomerIDFld() {
+        return deleteCustomerIDFld;
     }
 
     
